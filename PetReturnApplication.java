@@ -13,27 +13,13 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PetReturnApplication extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PetReturnApplication frame = new PetReturnApplication();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -124,6 +110,20 @@ public class PetReturnApplication extends JFrame {
 		lblEmployee_1_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		lblEmployee_1_2.setBounds(193, 338, 92, 18);
 		contentPane.add(lblEmployee_1_2);
+		
+		JButton btnNewButton_2_1 = new JButton("Back");
+		btnNewButton_2_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DBApp dbApp = new DBApp();
+				dbApp.setVisible(true);
+				
+				dispose();
+			}
+		});
+		btnNewButton_2_1.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		btnNewButton_2_1.setBackground(Color.WHITE);
+		btnNewButton_2_1.setBounds(10, 527, 89, 23);
+		contentPane.add(btnNewButton_2_1);
 	}
 
 }

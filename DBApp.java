@@ -19,9 +19,6 @@ public class DBApp extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -35,9 +32,6 @@ public class DBApp extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public DBApp() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 615);
@@ -77,6 +71,10 @@ public class DBApp extends JFrame {
 		JButton btnManage = new JButton("<html><div style='text-align: center;'>Pet Adoption<br>Application<div></html>");
 		btnManage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				PetAdoptionApplication petAdopt = new PetAdoptionApplication();
+				petAdopt.setVisible(true);
+				
+				dispose();
 			}
 		});
 		btnManage.setFont(new Font("Segoe UI", Font.BOLD, 15));
@@ -91,24 +89,56 @@ public class DBApp extends JFrame {
 		contentPane.add(lblSimulateATransaction);
 		
 		JButton btnpetReturnapplication = new JButton("<html><div style='text-align: center;'>Pet Return<br>Application<div></html>");
+		btnpetReturnapplication.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PetReturnApplication petReturn = new PetReturnApplication();
+				petReturn.setVisible(true);
+				
+				dispose();
+			}
+		});
 		btnpetReturnapplication.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnpetReturnapplication.setBounds(118, 378, 198, 52);
 		btnpetReturnapplication.setBackground(Color.WHITE);
 		contentPane.add(btnpetReturnapplication);
 		
 		JButton btnpetAdmissionapplication = new JButton("<html>\r\n<div style='text-align: center;'>\r\nEmployee Performance<br>\r\nReview\r\n<div>\r\n</html>");
+		btnpetAdmissionapplication.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EmployeePerformance empPerf = new EmployeePerformance();
+				empPerf.setVisible(true);
+				
+				dispose();
+			}
+		});
 		btnpetAdmissionapplication.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnpetAdmissionapplication.setBounds(118, 498, 198, 52);
 		btnpetAdmissionapplication.setBackground(Color.WHITE);
 		contentPane.add(btnpetAdmissionapplication);
 		
 		JButton btnpetAdmissionapplication_1 = new JButton("<html><div style='text-align: center;'>Pet Admission<br>Application<div></html>");
+		btnpetAdmissionapplication_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PetAdmissionApplication petAdmission = new PetAdmissionApplication();
+				petAdmission.setVisible(true);
+				
+				dispose();
+			}
+		});
 		btnpetAdmissionapplication_1.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnpetAdmissionapplication_1.setBounds(118, 441, 198, 52);
 		btnpetAdmissionapplication_1.setBackground(Color.WHITE);
 		contentPane.add(btnpetAdmissionapplication_1);
 		
 		JButton btnGenerateReports = new JButton("Generate Reports");
+		btnGenerateReports.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Reports reports = new Reports();
+				reports.setVisible(true);
+				
+				dispose();
+			}
+		});
 		btnGenerateReports.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnGenerateReports.setBounds(118, 207, 198, 52);
 		btnGenerateReports.setBackground(Color.WHITE);

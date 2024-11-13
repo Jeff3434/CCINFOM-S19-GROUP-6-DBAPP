@@ -1,7 +1,5 @@
 package app;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -33,9 +31,6 @@ public class Records extends JFrame {
 	private JScrollPane scrollPane;
 	private JTable petTable;
 
-	/**
-	 * Create the frame.
-	 */
 	public Records() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 515, 600);
@@ -76,6 +71,11 @@ public class Records extends JFrame {
 		contentPane.add(btnNewButton_1);
 		
 		JButton btnNewButton_2 = new JButton("Adoption");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadAdoptionData();
+			}
+		});
 		btnNewButton_2.setBackground(new Color(255, 255, 255));
 		btnNewButton_2.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		buttonGroup.add(btnNewButton_2);
@@ -88,6 +88,7 @@ public class Records extends JFrame {
 		buttonGroup.add(btnNewButton_3);
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				loadEmployeeData();
 			}
 		});
 		btnNewButton_3.setBounds(348, 54, 89, 23);
@@ -157,6 +158,36 @@ public class Records extends JFrame {
 	private void loadAdopterData() {
 	    try {
 	        ResultSet resultSet = dbConnector.fetchAdopterData();
+
+	        petTable = new JTable(buildTableModel(resultSet));
+
+	        scrollPane.setViewportView(petTable);
+	        revalidate();
+
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Error loading data: " + ex.getMessage());
+	    }
+	}
+	
+	private void loadAdoptionData() {
+	    try {
+	        ResultSet resultSet = dbConnector.fetchAdoptionData();
+
+	        petTable = new JTable(buildTableModel(resultSet));
+
+	        scrollPane.setViewportView(petTable);
+	        revalidate();
+
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Error loading data: " + ex.getMessage());
+	    }
+	}
+	
+	private void loadEmployeeData() {
+	    try {
+	        ResultSet resultSet = dbConnector.fetchEmployeeData();
 
 	        petTable = new JTable(buildTableModel(resultSet));
 
