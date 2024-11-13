@@ -1,0 +1,110 @@
+package app;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JScrollBar;
+import javax.swing.JList;
+
+public class DBApp extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					DBApp frame = new DBApp();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public DBApp() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 615);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Pet Adoption Database");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		lblNewLabel.setBounds(10, 11, 414, 32);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblSelectATransaction = new JLabel("Choose an option");
+		lblSelectATransaction.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSelectATransaction.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		lblSelectATransaction.setBounds(10, 101, 414, 32);
+		contentPane.add(lblSelectATransaction);
+		
+		JButton btnNewButton = new JButton("Manage Records");
+		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnNewButton.setBounds(118, 144, 198, 52);
+		contentPane.add(btnNewButton);
+		
+		JButton btnManage = new JButton("<html><div style='text-align: center;'>Pet Adoption<br>Application<div></html>");
+		btnManage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnManage.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnManage.setBounds(118, 313, 198, 52);
+		contentPane.add(btnManage);
+		
+		JLabel lblSimulateATransaction = new JLabel("Simulate a transaction");
+		lblSimulateATransaction.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSimulateATransaction.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		lblSimulateATransaction.setBounds(10, 270, 414, 32);
+		contentPane.add(lblSimulateATransaction);
+		
+		JButton btnpetReturnapplication = new JButton("<html><div style='text-align: center;'>Pet Return<br>Application<div></html>");
+		btnpetReturnapplication.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnpetReturnapplication.setBounds(118, 378, 198, 52);
+		contentPane.add(btnpetReturnapplication);
+		
+		JButton btnpetAdmissionapplication = new JButton("<html><div style='text-align: center;'>Employee Performance<br>Review<div></html>");
+		btnpetAdmissionapplication.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnpetAdmissionapplication.setBounds(118, 498, 198, 52);
+		contentPane.add(btnpetAdmissionapplication);
+		
+		JButton btnpetAdmissionapplication_1 = new JButton("<html><div style='text-align: center;'>Pet Admission<br>Application<div></html>");
+		btnpetAdmissionapplication_1.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnpetAdmissionapplication_1.setBounds(118, 441, 198, 52);
+		contentPane.add(btnpetAdmissionapplication_1);
+		
+		JButton btnGenerateReports = new JButton("Generate Reports");
+		btnGenerateReports.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnGenerateReports.setBounds(118, 207, 198, 52);
+		contentPane.add(btnGenerateReports);
+		
+		JLabel lblShelterHappyPaws = new JLabel("<html>\r\n<div style='text-align: center;'>\r\n<b>Shelter:</b> Happy Paws Adoption Center<br>\r\n<b>Location:</b> 123 Mabini Street, Ermita, Manila, 1000\r\n</div>\r\n</html>");
+		lblShelterHappyPaws.setHorizontalAlignment(SwingConstants.CENTER);
+		lblShelterHappyPaws.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblShelterHappyPaws.setBounds(10, 50, 414, 40);
+		contentPane.add(lblShelterHappyPaws);
+	}
+}
