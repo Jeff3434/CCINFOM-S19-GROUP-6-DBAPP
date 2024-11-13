@@ -10,6 +10,7 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
+import java.awt.Color;
 
 public class Reports extends JFrame {
 
@@ -51,6 +52,7 @@ public class Reports extends JFrame {
 		contentPane.add(lblReports);
 		
 		JButton btnNewButton_1_1 = new JButton("Adoption History");
+		btnNewButton_1_1.setBackground(new Color(255, 255, 255));
 		btnNewButton_1_1.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		btnNewButton_1_1.setBounds(65, 110, 179, 62);
 		contentPane.add(btnNewButton_1_1);
@@ -62,23 +64,21 @@ public class Reports extends JFrame {
 		contentPane.add(lblSelectAReport);
 		
 		JButton btnNewButton_1_1_3 = new JButton("Employee Adoption");
+		btnNewButton_1_1_3.setBackground(new Color(255, 255, 255));
 		btnNewButton_1_1_3.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		btnNewButton_1_1_3.setBounds(65, 184, 179, 62);
 		contentPane.add(btnNewButton_1_1_3);
 		
 		JButton btnNewButton_1_1_3_1 = new JButton("Adoption Trends");
+		btnNewButton_1_1_3_1.setBackground(new Color(255, 255, 255));
 		btnNewButton_1_1_3_1.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		btnNewButton_1_1_3_1.setBounds(65, 257, 179, 62);
 		contentPane.add(btnNewButton_1_1_3_1);
 		
 		JButton btnNewButton_1_1_3_1_1 = new JButton("Adoption Revenue");
+		btnNewButton_1_1_3_1_1.setBackground(new Color(255, 255, 255));
 		btnNewButton_1_1_3_1_1.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		btnNewButton_1_1_3_1_1.setBounds(65, 330, 179, 62);
 		contentPane.add(btnNewButton_1_1_3_1_1);
-		
-		JButton btnNewButton_1_1_3_1_1_1 = new JButton("Adoption Revenue");
-		btnNewButton_1_1_3_1_1_1.setFont(new Font("Segoe UI", Font.BOLD, 13));
-		btnNewButton_1_1_3_1_1_1.setBounds(65, 399, 179, 62);
-		contentPane.add(btnNewButton_1_1_3_1_1_1);
 	}
 }

@@ -1,5 +1,6 @@
 package app;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -11,10 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.SwingConstants;
-import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JScrollBar;
-import javax.swing.JList;
 
 public class DBApp extends JFrame {
 
@@ -62,8 +60,18 @@ public class DBApp extends JFrame {
 		contentPane.add(lblSelectATransaction);
 		
 		JButton btnNewButton = new JButton("Manage Records");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Records records = new Records();
+				records.setVisible(true);
+				
+				dispose();
+			}
+		});
 		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnNewButton.setBounds(118, 144, 198, 52);
+		btnNewButton.setBackground(Color.WHITE);
+		
 		contentPane.add(btnNewButton);
 		
 		JButton btnManage = new JButton("<html><div style='text-align: center;'>Pet Adoption<br>Application<div></html>");
@@ -73,9 +81,10 @@ public class DBApp extends JFrame {
 		});
 		btnManage.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnManage.setBounds(118, 313, 198, 52);
+		btnManage.setBackground(Color.WHITE);
 		contentPane.add(btnManage);
 		
-		JLabel lblSimulateATransaction = new JLabel("Simulate a transaction");
+		JLabel lblSimulateATransaction = new JLabel("Simulate an application");
 		lblSimulateATransaction.setHorizontalAlignment(SwingConstants.LEFT);
 		lblSimulateATransaction.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		lblSimulateATransaction.setBounds(10, 270, 414, 32);
@@ -84,21 +93,25 @@ public class DBApp extends JFrame {
 		JButton btnpetReturnapplication = new JButton("<html><div style='text-align: center;'>Pet Return<br>Application<div></html>");
 		btnpetReturnapplication.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnpetReturnapplication.setBounds(118, 378, 198, 52);
+		btnpetReturnapplication.setBackground(Color.WHITE);
 		contentPane.add(btnpetReturnapplication);
 		
-		JButton btnpetAdmissionapplication = new JButton("<html><div style='text-align: center;'>Employee Performance<br>Review<div></html>");
+		JButton btnpetAdmissionapplication = new JButton("<html>\r\n<div style='text-align: center;'>\r\nEmployee Performance<br>\r\nReview\r\n<div>\r\n</html>");
 		btnpetAdmissionapplication.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnpetAdmissionapplication.setBounds(118, 498, 198, 52);
+		btnpetAdmissionapplication.setBackground(Color.WHITE);
 		contentPane.add(btnpetAdmissionapplication);
 		
 		JButton btnpetAdmissionapplication_1 = new JButton("<html><div style='text-align: center;'>Pet Admission<br>Application<div></html>");
 		btnpetAdmissionapplication_1.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnpetAdmissionapplication_1.setBounds(118, 441, 198, 52);
+		btnpetAdmissionapplication_1.setBackground(Color.WHITE);
 		contentPane.add(btnpetAdmissionapplication_1);
 		
 		JButton btnGenerateReports = new JButton("Generate Reports");
 		btnGenerateReports.setFont(new Font("Segoe UI", Font.BOLD, 15));
 		btnGenerateReports.setBounds(118, 207, 198, 52);
+		btnGenerateReports.setBackground(Color.WHITE);
 		contentPane.add(btnGenerateReports);
 		
 		JLabel lblShelterHappyPaws = new JLabel("<html>\r\n<div style='text-align: center;'>\r\n<b>Shelter:</b> Happy Paws Adoption Center<br>\r\n<b>Location:</b> 123 Mabini Street, Ermita, Manila, 1000\r\n</div>\r\n</html>");
