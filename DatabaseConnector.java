@@ -6,6 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DatabaseConnector {
     
@@ -116,8 +120,161 @@ public class DatabaseConnector {
 
         Connection conn = getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, year);  // Set year
-        stmt.setInt(2, month); // Set month
+        stmt.setInt(1, year);  
+        stmt.setInt(2, month); 
         return stmt.executeQuery();
     }
+    
+    public boolean insertAdoptionRecord(int petId, int adopterId, int employeeId, String adoptionDate, double adoptionFee, String reason) throws SQLException {
+        String sql = "INSERT INTO adoption (pet_id, adopter_id, employee_id, adoption_date, adoption_fee) VALUES (?, ?, ?, ?, ?)";
+        Connection conn = getConnection();
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, petId);
+            pst.setInt(2, adopterId);
+            pst.setInt(3, employeeId);
+            pst.setString(4, adoptionDate);
+            pst.setDouble(5, adoptionFee);
+
+            int rowsAffected = pst.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                String updatePetSql = "UPDATE pet SET adoption_status = 'adopted' WHERE pet_id = ?";
+                try (PreparedStatement updatePst = conn.prepareStatement(updatePetSql)) {
+                    updatePst.setInt(1, petId);
+                    updatePst.executeUpdate();
+                }
+
+                if (reason != null && !reason.isEmpty()) {
+                    String updateReasonSql = "UPDATE adoption SET reason = ? WHERE pet_id = ? AND adopter_id = ?";
+                    try (PreparedStatement updateReasonPst = conn.prepareStatement(updateReasonSql)) {
+                        updateReasonPst.setString(1, reason);
+                        updateReasonPst.setInt(2, petId);
+                        updateReasonPst.setInt(3, adopterId);
+                        updateReasonPst.executeUpdate();
+                    }
+                }
+
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public Map<Integer, String> getEmployeeNamesByPartialName(String partialName) throws SQLException {
+        Map<Integer, String> employeeNames = new HashMap<>();
+        Connection conn = getConnection();
+        String query = "SELECT employee_id, first_name, last_name FROM employee WHERE first_name LIKE ? OR last_name LIKE ?";
+
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setString(1, "%" + partialName + "%");
+            pst.setString(2, "%" + partialName + "%");
+            
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                int employeeId = rs.getInt("employee_id");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+
+                employeeNames.put(employeeId, firstName + " " + lastName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return employeeNames;
+    }
+    
+    public Map<Integer, String> getPetInfoByFilters(String nameFilter, String breedFilter, String speciesFilter) throws SQLException {
+        Map<Integer, String> petInfo = new HashMap<>();
+        Connection conn = getConnection();
+        String query = "SELECT pet_id, name, breed, species FROM pets WHERE name LIKE ? AND breed LIKE ? AND species LIKE ?";
+
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setString(1, "%" + nameFilter + "%");
+            pst.setString(2, "%" + breedFilter + "%");
+            pst.setString(3, "%" + speciesFilter + "%");
+            
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                int petId = rs.getInt("pet_id");
+                String name = rs.getString("name");
+                String breed = rs.getString("breed");
+                String species = rs.getString("species");
+
+                petInfo.put(petId, name + " - " + breed + " - " + species);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return petInfo;
+    }
+    
+    public Map<Integer, String> getPetsByFilters(String nameFilter, String breedFilter, String speciesFilter) throws SQLException {
+        Map<Integer, String> pets = new HashMap<>();
+        Connection conn = getConnection();
+        String query = "SELECT pet_id, pet_name, breed, species FROM pet WHERE pet_name LIKE ? AND breed LIKE ? AND species LIKE ?";
+
+        try (PreparedStatement pst = conn.prepareStatement(query)) {
+            pst.setString(1, "%" + nameFilter + "%");
+            pst.setString(2, "%" + breedFilter + "%");
+            pst.setString(3, "%" + speciesFilter + "%");
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                int petId = rs.getInt("pet_id");
+                String name = rs.getString("name");
+                String breed = rs.getString("breed");
+                String species = rs.getString("species");
+
+                pets.put(petId, name + " (" + breed + ", " + species + ")");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pets;
+    }
+    
+    public boolean insertAdopter(String adopterType, String firstName, String lastName, int age, String sex, int petCount,
+    	String address, String income, String contact, String civilStatus, String reason) throws SQLException {
+		String query = "INSERT INTO adopter (adopter_type, first_name, last_name, age, sex, pet_count, address, income_level, contact_number, civil_status, reason) " +
+		  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		
+		try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+			stmt.setString(1, adopterType);
+			stmt.setString(2, firstName);
+			stmt.setString(3, lastName);
+			stmt.setInt(4, age);
+			stmt.setString(5, sex);
+			stmt.setInt(6, petCount);
+			stmt.setString(7, address);
+			stmt.setString(8, income);
+			stmt.setString(9, contact);
+			stmt.setString(10, civilStatus);
+			stmt.setString(11, reason);
+			
+			int rowsAffected = stmt.executeUpdate();
+			return rowsAffected > 0;
+		}
+	}
+
+    
+    public int getLastInsertedAdopterId() throws SQLException {
+	    String query = "SELECT LAST_INSERT_ID()";  
+	    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query);
+	         ResultSet rs = stmt.executeQuery()) {
+	        if (rs.next()) {
+	            return rs.getInt(1); 
+	        } else {
+	            throw new SQLException("Failed to retrieve the last inserted adopter_id.");
+	        }
+	    }
+	}
+    
+    
+
 }
