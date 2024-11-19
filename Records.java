@@ -22,8 +22,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-
 import java.awt.Color;
 import javax.swing.JRadioButton;
 
@@ -38,7 +36,7 @@ public class Records extends JFrame {
 
 	public Records() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 705);
+		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -66,17 +64,8 @@ public class Records extends JFrame {
 		});
 		btnBack.setBackground(new Color(255, 255, 255));
 		btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		btnBack.setBounds(10, 637, 89, 23);
+		btnBack.setBounds(10, 527, 89, 23);
 		contentPane.add(btnBack);
-		
-		JLabel lblNewLabel = new JLabel("Search");
-		lblNewLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblNewLabel.setBounds(10, 494, 46, 18);
-		contentPane.add(lblNewLabel);
-		
-		JTextPane textPane = new JTextPane();
-		textPane.setBounds(56, 494, 177, 23);
-		contentPane.add(textPane);
 		
 		JRadioButton rdbtnPet = new JRadioButton("Pet");
 		rdbtnPet.addActionListener(new ActionListener() {
@@ -125,7 +114,7 @@ public class Records extends JFrame {
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.setBackground(new Color(255, 255, 255));
 		btnDelete.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		btnDelete.setBounds(155, 563, 89, 23);
+		btnDelete.setBounds(348, 495, 89, 23);
 		contentPane.add(btnDelete);
 		btnDelete.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
@@ -135,15 +124,19 @@ public class Records extends JFrame {
 		            if (rdbtnPet.isSelected()) {
 		                int petId = (int) petTable.getValueAt(selectedRow, 0); 
 		                deletePetFromDatabase(petId);
+		                loadPetData();
 		            } else if (rdbtnAdopter.isSelected()) {
 		                int adopterId = (int) petTable.getValueAt(selectedRow, 0); 
 		                deleteAdopterFromDatabase(adopterId);
+		                loadAdopterData();
 		            } else if (rdbtnAdoption.isSelected()) {
 		                int adoptionId = (int) petTable.getValueAt(selectedRow, 0); 
 		                deleteAdoptionFromDatabase(adoptionId);
+		                loadAdoptionData();
 		            } else if (rdbtnEmployee.isSelected()) {
 		                int employeeId = (int) petTable.getValueAt(selectedRow, 0); 
 		                deleteEmployeeFromDatabase(employeeId);
+		                loadEmployeeData();
 		            }
 		        } else {
 		            JOptionPane.showMessageDialog(null, "Please select a record to delete.");
@@ -154,18 +147,22 @@ public class Records extends JFrame {
 		JButton btnAdd = new JButton("Add");
 		btnAdd.setBackground(new Color(255, 255, 255));
 		btnAdd.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		btnAdd.setBounds(56, 562, 89, 23);
+		btnAdd.setBounds(248, 494, 89, 23);
 		contentPane.add(btnAdd);
 		btnAdd.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        if (rdbtnPet.isSelected()) {
 		            addPetData();
+		            loadPetData();
 		        } else if (rdbtnAdopter.isSelected()) {
 		            addAdopterData();
+		            loadAdopterData();
 		        } else if (rdbtnAdoption.isSelected()) {
 		            addAdoptionData();
+		            loadAdoptionData();
 		        } else if (rdbtnEmployee.isSelected()) {
 		            addEmployeeData();
+		            loadEmployeeData();
 		        } else {
 		            JOptionPane.showMessageDialog(null, "Please select a valid record type.");
 		        }
@@ -175,7 +172,7 @@ public class Records extends JFrame {
 		JButton btnModify = new JButton("Modify");
 		btnModify.setBackground(new Color(255, 255, 255));
 		btnModify.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		btnModify.setBounds(249, 563, 89, 23);
+		btnModify.setBounds(448, 495, 89, 23);
 		contentPane.add(btnModify);
 		btnModify.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
@@ -185,31 +182,25 @@ public class Records extends JFrame {
 		            if (rdbtnPet.isSelected()) {
 		                int petId = (int) petTable.getValueAt(selectedRow, 0); 
 		                modifyPetData(petId);
+		                loadPetData();
 		            } else if (rdbtnAdopter.isSelected()) {
 		                int adopterId = (int) petTable.getValueAt(selectedRow, 0); 
 		                modifyAdopterData(adopterId);
+		                loadAdopterData();
 		            } else if (rdbtnAdoption.isSelected()) {
 		                int adoptionId = (int) petTable.getValueAt(selectedRow, 0); 
 		                modifyAdoptionData(adoptionId);
+		                loadAdoptionData();
 		            } else if (rdbtnEmployee.isSelected()) {
 		                int employeeId = (int) petTable.getValueAt(selectedRow, 0);
 		                modifyEmployeeData(employeeId);
+		                loadEmployeeData();
 		            }
 		        } else {
 		            JOptionPane.showMessageDialog(null, "Please select a record to modify.");
 		        }
 		    }
 		});
-
-		JRadioButton rdbtnId = new JRadioButton("ID");
-		rdbtnId.setHorizontalAlignment(SwingConstants.CENTER);
-		rdbtnId.setBounds(56, 524, 109, 23);
-		contentPane.add(rdbtnId);
-		
-		JRadioButton rdbtnName = new JRadioButton("Name");
-		rdbtnName.setHorizontalAlignment(SwingConstants.CENTER);
-		rdbtnName.setBounds(167, 524, 109, 23);
-		contentPane.add(rdbtnName);
 	}
 	
 	private void loadPetData() {
@@ -256,7 +247,7 @@ public class Records extends JFrame {
 	        JOptionPane.showMessageDialog(this, "Error loading data: " + ex.getMessage());
 	    }
 	}
-	
+
 	private void loadEmployeeData() {
 	    try {
 	        ResultSet resultSet = dbConnector.fetchEmployeeData();
@@ -411,7 +402,6 @@ public class Records extends JFrame {
 	        String civilStatus = civilStatusField.getText();
 	        String reason = reasonField.getText();
 
-	        // Validate input data
 	        if (age >= 16 && age <= 80) {
 	            if (sex.equals("male") || sex.equals("female")) {
 	                if (petCount >= 0 && petCount <= 5) {
@@ -644,7 +634,6 @@ public class Records extends JFrame {
 	        String dateWorked = dateWorkedField.getText();
 	        String notes = notesField.getText();
 
-	        // Validate input data
 	        if (age >= 16 && age <= 80) {
 	            if (sex.equals("male") || sex.equals("female")) {
 	                if (salary >= 10000 && salary <= 100000) {
@@ -1193,7 +1182,6 @@ public class Records extends JFrame {
 	        JOptionPane.showMessageDialog(null, "Error fetching employee data: " + ex.getMessage());
 	    }
 	}
-
 
 	public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
 	    DefaultTableModel model = new DefaultTableModel() {

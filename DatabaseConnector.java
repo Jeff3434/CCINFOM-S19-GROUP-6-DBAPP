@@ -30,9 +30,17 @@ public class DatabaseConnector {
     }
     
     public ResultSet fetchAdoptionData() throws SQLException {
+        String sql = "SELECT ad.adoption_id, ad.pet_id, ad.adopter_id, ad.employee_id, "
+                   + "ad.adoption_fee, ad.adoption_date, "
+                   + "p.pet_name, p.species, p.breed, "
+                   + "CONCAT(a.first_name, ' ', a.last_name) AS adopter_name "
+                   + "FROM adoption ad "
+                   + "JOIN pet p ON ad.pet_id = p.pet_id "
+                   + "JOIN adopter a ON ad.adopter_id = a.adopter_id";
+
         Connection conn = getConnection();
         Statement stmt = conn.createStatement();
-        return stmt.executeQuery("SELECT * FROM adoption");
+        return stmt.executeQuery(sql);
     }
     
     public ResultSet fetchEmployeeData() throws SQLException {
@@ -60,7 +68,7 @@ public class DatabaseConnector {
         return stmt.executeQuery();
     }
 
-    public ResultSet fetchEmployeeAdoptionData(String employeeName, String breed, String species) throws SQLException {
+    public ResultSet fetchEmployeeAdoptionData(String employeeName) throws SQLException {
         String sql = "SELECT e.employee_id, "
                    + "e.first_name AS employee_first_name, "
                    + "e.last_name AS employee_last_name, "
@@ -72,16 +80,17 @@ public class DatabaseConnector {
                    + "FROM adoption a "
                    + "JOIN pet p ON a.pet_id = p.pet_id "
                    + "JOIN employee e ON a.employee_id = e.employee_id "
-                   + "WHERE e.first_name = ? AND p.breed = ? AND p.species = ? "
+                   + "WHERE e.first_name || ' ' || e.last_name = ? "
                    + "ORDER BY e.employee_id, p.adoption_status DESC";
 
-        Connection conn = getConnection();
+        Connection conn = getConnection();  // Make sure your connection method works correctly
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, employeeName); 
-        stmt.setString(2, breed);        
-        stmt.setString(3, species);       
-        return stmt.executeQuery();
+        stmt.setString(1, employeeName);  // Set employee name in the query
+        
+        return stmt.executeQuery();  // Return the result set
     }
+
+
 
     public ResultSet fetchAdoptionTrends(int year, int month) throws SQLException {
         String sql = "SELECT YEAR(a.adoption_date) AS adoption_year, "
@@ -275,6 +284,26 @@ public class DatabaseConnector {
 	    }
 	}
     
-    
+    public ResultSet fetchEmployeeList() throws SQLException {
+        Connection conn = getConnection();
+        String query = "SELECT employee_id, first_name, last_name FROM employee";
+        Statement stmt = conn.createStatement();
+        return stmt.executeQuery(query);
+    }
+
+    public ResultSet fetchSpeciesList() throws SQLException {
+        String sql = "SELECT DISTINCT species FROM pet ORDER BY species"; 
+        Connection conn = getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        return stmt.executeQuery();
+    }
+
+    public ResultSet fetchBreedList() throws SQLException {
+        String sql = "SELECT DISTINCT breed FROM pet ORDER BY breed";
+        Connection conn = getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        return stmt.executeQuery();
+    }
+
 
 }

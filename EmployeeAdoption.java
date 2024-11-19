@@ -15,10 +15,11 @@ public class EmployeeAdoption extends JFrame {
     private DatabaseConnector dbConnector = new DatabaseConnector();
     
     private JTable employeeAdoptionTable;
+    private JTable employeeTable; // New JTable for employee list
 
     public EmployeeAdoption() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 515, 600);
+        setBounds(100, 100, 840, 605);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -28,42 +29,18 @@ public class EmployeeAdoption extends JFrame {
         JLabel lblEmployeeAdoption = new JLabel("Employee Adoption");
         lblEmployeeAdoption.setHorizontalAlignment(SwingConstants.CENTER);
         lblEmployeeAdoption.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblEmployeeAdoption.setBounds(10, 11, 479, 32);
+        lblEmployeeAdoption.setBounds(10, 11, 804, 32);
         contentPane.add(lblEmployeeAdoption);
         
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(10, 54, 479, 349);
+        scrollPane.setBounds(10, 54, 804, 349);
         contentPane.add(scrollPane);
         
         JLabel lblEmployee = new JLabel("Employee");
-        lblEmployee.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblEmployee.setHorizontalAlignment(SwingConstants.LEFT);
         lblEmployee.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        lblEmployee.setBounds(60, 430, 92, 18);
+        lblEmployee.setBounds(76, 414, 92, 18);
         contentPane.add(lblEmployee);
-        
-        JTextPane textPaneEmployee = new JTextPane();
-        textPaneEmployee.setBounds(161, 428, 177, 23);
-        contentPane.add(textPaneEmployee);
-        
-        JTextPane textPaneBreed = new JTextPane();
-        textPaneBreed.setBounds(161, 462, 177, 23);
-        contentPane.add(textPaneBreed);
-        
-        JTextPane textPaneSpecies = new JTextPane();
-        textPaneSpecies.setBounds(161, 496, 177, 23);
-        contentPane.add(textPaneSpecies);
-        
-        JLabel lblBreed = new JLabel("Breed");
-        lblBreed.setHorizontalAlignment(SwingConstants.RIGHT);
-        lblBreed.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        lblBreed.setBounds(60, 464, 92, 18);
-        contentPane.add(lblBreed);
-        
-        JLabel lblSpecies = new JLabel("Species");
-        lblSpecies.setHorizontalAlignment(SwingConstants.RIGHT);
-        lblSpecies.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        lblSpecies.setBounds(60, 498, 92, 18);
-        contentPane.add(lblSpecies);
         
         JButton btnBack = new JButton("Back");
         btnBack.addActionListener(new ActionListener() {
@@ -83,29 +60,61 @@ public class EmployeeAdoption extends JFrame {
         btnLoadHistory.setBackground(new Color(255, 255, 255));
         btnLoadHistory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String employeeName = textPaneEmployee.getText().trim();
-                String breed = textPaneBreed.getText().trim();
-                String species = textPaneSpecies.getText().trim();
+                // Get the selected row index from the employeeTable
+                int selectedRow = employeeTable.getSelectedRow();
                 
-                if (employeeName.isEmpty() || breed.isEmpty() || species.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Please fill in all fields.");
-                } else {
+                // Check if a row is selected
+                if (selectedRow != -1) {
+                    // Retrieve employee information from the selected row
+                    int employeeId = (int) employeeTable.getValueAt(selectedRow, 0);  // Assuming the first column is employee_id
+                    String firstName = (String) employeeTable.getValueAt(selectedRow, 1);  // Assuming the second column is first_name
+                    String lastName = (String) employeeTable.getValueAt(selectedRow, 2);  // Assuming the third column is last_name
+                    
+                    // Combine the first and last name as the employeeName
+                    String employeeName = firstName + " " + lastName;
+                    
                     try {
-                        ResultSet resultSet = dbConnector.fetchEmployeeAdoptionData(employeeName, breed, species);
+                        // Fetch employee adoption data using employeeName
+                        ResultSet resultSet = dbConnector.fetchEmployeeAdoptionData(employeeName);
 
+                        // Display the adoption data in the employeeAdoptionTable
                         employeeAdoptionTable = new JTable(buildTableModel(resultSet));
                         scrollPane.setViewportView(employeeAdoptionTable);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                         JOptionPane.showMessageDialog(null, "Error fetching employee adoption data: " + ex.getMessage());
                     }
+                } else {
+                    // If no employee is selected, show an error message
+                    JOptionPane.showMessageDialog(null, "Please select an employee from the list.");
                 }
             }
         });
-        btnLoadHistory.setBounds(357, 462, 120, 23);
+        btnLoadHistory.setBounds(352, 527, 120, 23);
         contentPane.add(btnLoadHistory);
+        
+        JScrollPane scrollPaneEmployee = new JScrollPane();
+        scrollPaneEmployee.setBounds(76, 432, 177, 89);
+        contentPane.add(scrollPaneEmployee);
+        
+        // Populate the employee list
+        populateEmployeeList(scrollPaneEmployee);
     }
-    
+
+    // Method to populate the employee list in the scroll pane
+    private void populateEmployeeList(JScrollPane scrollPaneEmployee) {
+        try {
+            ResultSet rs = dbConnector.fetchEmployeeList(); // Create this method in your DatabaseConnector class
+            employeeTable = new JTable(buildTableModel(rs));
+            employeeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            scrollPaneEmployee.setViewportView(employeeTable);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching employee data: " + ex.getMessage());
+        }
+    }
+
+    // Method to build the table model from the ResultSet
     public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
         DefaultTableModel model = new DefaultTableModel();
         

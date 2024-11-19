@@ -18,7 +18,7 @@ public class AdoptionRevenue extends JFrame {
 
     public AdoptionRevenue() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 515, 600);
+        setBounds(100, 100, 840, 605);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -28,31 +28,31 @@ public class AdoptionRevenue extends JFrame {
         JLabel lblAdoptionRevenue = new JLabel("Adoption Revenue");
         lblAdoptionRevenue.setHorizontalAlignment(SwingConstants.CENTER);
         lblAdoptionRevenue.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblAdoptionRevenue.setBounds(10, 11, 479, 32);
+        lblAdoptionRevenue.setBounds(10, 11, 804, 32);
         contentPane.add(lblAdoptionRevenue);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(10, 54, 479, 349);
+        scrollPane.setBounds(10, 54, 804, 349);
         contentPane.add(scrollPane);
 
         JLabel lblMonth = new JLabel("Month");
         lblMonth.setHorizontalAlignment(SwingConstants.RIGHT);
         lblMonth.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        lblMonth.setBounds(60, 437, 92, 18);
+        lblMonth.setBounds(223, 471, 92, 18);
         contentPane.add(lblMonth);
 
-        JTextPane textPaneMonth = new JTextPane();
-        textPaneMonth.setBounds(161, 435, 177, 23);
+        JTextField textPaneMonth = new JTextField();
+        textPaneMonth.setBounds(324, 469, 177, 23);
         contentPane.add(textPaneMonth);
 
-        JTextPane textPaneYear = new JTextPane();
-        textPaneYear.setBounds(161, 469, 177, 23);
+        JTextField textPaneYear = new JTextField();
+        textPaneYear.setBounds(324, 435, 177, 23);
         contentPane.add(textPaneYear);
 
         JLabel lblYear = new JLabel("Year");
         lblYear.setHorizontalAlignment(SwingConstants.RIGHT);
         lblYear.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        lblYear.setBounds(60, 471, 92, 18);
+        lblYear.setBounds(223, 437, 92, 18);
         contentPane.add(lblYear);
 
         JButton btnBack = new JButton("Back");
@@ -94,7 +94,7 @@ public class AdoptionRevenue extends JFrame {
                 }
             }
         });
-        btnLoadRevenue.setBounds(189, 503, 120, 23);
+        btnLoadRevenue.setBounds(352, 506, 120, 23);
         contentPane.add(btnLoadRevenue);
     }
 

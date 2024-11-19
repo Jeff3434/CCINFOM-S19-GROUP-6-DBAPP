@@ -3,45 +3,50 @@ package app;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.SwingConstants;
-import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 import java.awt.event.ActionEvent;
 import javax.swing.ButtonGroup;
+import java.awt.Choice;
+import javax.swing.JTextField;
 
 public class PetAdoptionApplication extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private int selectedEmployeeId = -1;
-	private int selectedPetId = -1;
 	
-	private JTextPane textPaneNameFilter;
-	private JTextPane textPaneBreedFilter;
-	private JTextPane textPaneSpeciesFilter;
-	private JScrollPane scrollPaneFilter;
+	private JTextField textPaneNameFilter;
+	private JScrollPane scrollPanePet;
 	private final ButtonGroup buttonGroupGender = new ButtonGroup();
 	private final ButtonGroup buttonGroupStatus = new ButtonGroup();
 	private final ButtonGroup buttonGroupIncome = new ButtonGroup();
-
+	private Choice choiceEmployee;
+	private Choice choiceBreed;
+	private Choice choiceSpecies;
+	private DatabaseConnector dbConnector = new DatabaseConnector();
+	
 	public PetAdoptionApplication() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 515, 700);
+		setBounds(100, 100, 590, 670);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -51,217 +56,125 @@ public class PetAdoptionApplication extends JFrame {
 		JLabel lblPetAdoptionApplication = new JLabel("Pet Adoption Application");
 		lblPetAdoptionApplication.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPetAdoptionApplication.setFont(new Font("Segoe UI", Font.BOLD, 20));
-		lblPetAdoptionApplication.setBounds(10, 11, 479, 32);
+		lblPetAdoptionApplication.setBounds(10, 11, 549, 32);
 		contentPane.add(lblPetAdoptionApplication);
 		
-		JLabel lblName = new JLabel("Name");
+		JLabel lblName = new JLabel("First Name");
 		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblName.setFont(new Font("Segoe UI", Font.PLAIN, 17));
+		lblName.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		lblName.setBounds(10, 56, 92, 18);
 		contentPane.add(lblName);
 		
-		JTextPane textPaneName = new JTextPane();
-		textPaneName.setBounds(111, 54, 351, 23);
-		contentPane.add(textPaneName);
-		
 		JLabel lblAge = new JLabel("Address");
 		lblAge.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblAge.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-		lblAge.setBounds(10, 87, 92, 18);
+		lblAge.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblAge.setBounds(10, 128, 92, 18);
 		contentPane.add(lblAge);
 		
 		JLabel lblAge_1 = new JLabel("Age");
 		lblAge_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblAge_1.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-		lblAge_1.setBounds(10, 148, 92, 18);
+		lblAge_1.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblAge_1.setBounds(10, 174, 92, 18);
 		contentPane.add(lblAge_1);
 		
-		JTextPane textPaneAge = new JTextPane();
-		textPaneAge.setBounds(111, 146, 141, 23);
+		JTextField textPaneAge = new JTextField();
+		textPaneAge.setBounds(111, 172, 141, 23);
 		contentPane.add(textPaneAge);
 		
 		JLabel lblAge_1_1 = new JLabel("Sex");
 		lblAge_1_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblAge_1_1.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-		lblAge_1_1.setBounds(218, 148, 92, 18);
+		lblAge_1_1.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblAge_1_1.setBounds(298, 176, 92, 18);
 		contentPane.add(lblAge_1_1);
 		
 		JLabel lblName_1 = new JLabel("Contact");
 		lblName_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblName_1.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-		lblName_1.setBounds(10, 210, 92, 18);
+		lblName_1.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblName_1.setBounds(10, 236, 92, 18);
 		contentPane.add(lblName_1);
 		
-		JTextPane textPaneContact = new JTextPane();
-		textPaneContact.setBounds(111, 208, 351, 23);
+		JTextField textPaneContact = new JTextField();
+		textPaneContact.setBounds(111, 234, 448, 23);
 		contentPane.add(textPaneContact);
 		
 		JLabel lblReason = new JLabel("Reason");
 		lblReason.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblReason.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-		lblReason.setBounds(10, 239, 92, 18);
+		lblReason.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblReason.setBounds(10, 282, 92, 18);
 		contentPane.add(lblReason);
 		
 		JLabel lblPetCount = new JLabel("Income Level");
 		lblPetCount.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblPetCount.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		lblPetCount.setBounds(10, 301, 92, 18);
+		lblPetCount.setBounds(10, 327, 92, 18);
 		contentPane.add(lblPetCount);
-		
-		JTextPane textPanePetCount = new JTextPane();
-		textPanePetCount.setBounds(111, 333, 351, 23);
-		contentPane.add(textPanePetCount);
 		
 		JLabel lblPetCount_1 = new JLabel("Pet Count");
 		lblPetCount_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblPetCount_1.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-		lblPetCount_1.setBounds(10, 335, 92, 18);
+		lblPetCount_1.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblPetCount_1.setBounds(10, 361, 92, 18);
 		contentPane.add(lblPetCount_1);
 		
-		scrollPaneFilter = new JScrollPane();
-		scrollPaneFilter.setBounds(111, 482, 164, 102);
-		contentPane.add(scrollPaneFilter);
+		scrollPanePet = new JScrollPane();
+		scrollPanePet.setBounds(111, 449, 279, 102);
+		contentPane.add(scrollPanePet);
 		
 		JLabel lblPets = new JLabel("Search Pet");
 		lblPets.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblPets.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-		lblPets.setBounds(10, 484, 92, 18);
+		lblPets.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblPets.setBounds(10, 491, 92, 18);
 		contentPane.add(lblPets);
 		
-		textPaneNameFilter = new JTextPane();
-		textPaneNameFilter.setBounds(365, 482, 97, 23);
+		textPaneNameFilter = new JTextField();
+		textPaneNameFilter.setBounds(452, 449, 97, 23);
 		contentPane.add(textPaneNameFilter);
-		textPaneNameFilter.getDocument().addDocumentListener(new DocumentListener() {
-		    public void insertUpdate(DocumentEvent e) {
-		        try {
-					updatePetList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-
-		    public void removeUpdate(DocumentEvent e) {
-		        try {
-					updatePetList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-
-		    public void changedUpdate(DocumentEvent e) {
-		        try {
-					updatePetList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-		});
-		
 		
 		JLabel lblEmployee_1 = new JLabel("Name");
 		lblEmployee_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblEmployee_1.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblEmployee_1.setBounds(264, 484, 92, 18);
+		lblEmployee_1.setBounds(351, 451, 92, 18);
 		contentPane.add(lblEmployee_1);
-		
-		textPaneBreedFilter = new JTextPane();
-		textPaneBreedFilter.setBounds(365, 516, 97, 23);
-		contentPane.add(textPaneBreedFilter);
-		textPaneBreedFilter.getDocument().addDocumentListener(new DocumentListener() {
-		    public void insertUpdate(DocumentEvent e) {
-		    	try {
-					updatePetList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-
-		    public void removeUpdate(DocumentEvent e) {
-		        try {
-					updatePetList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-
-		    public void changedUpdate(DocumentEvent e) {
-		        try {
-					updatePetList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-		});
 		
 		JLabel lblEmployee_1_1 = new JLabel("Breed");
 		lblEmployee_1_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblEmployee_1_1.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblEmployee_1_1.setBounds(264, 518, 92, 18);
+		lblEmployee_1_1.setBounds(351, 504, 92, 18);
 		contentPane.add(lblEmployee_1_1);
 		
 		JLabel lblEmployee_1_1_1 = new JLabel("Species");
 		lblEmployee_1_1_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblEmployee_1_1_1.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblEmployee_1_1_1.setBounds(264, 552, 92, 18);
+		lblEmployee_1_1_1.setBounds(351, 479, 92, 18);
 		contentPane.add(lblEmployee_1_1_1);
 		
-		textPaneSpeciesFilter = new JTextPane();
-		textPaneSpeciesFilter.setBounds(365, 550, 97, 23);
-		contentPane.add(textPaneSpeciesFilter);
-		textPaneSpeciesFilter.getDocument().addDocumentListener(new DocumentListener() {
-		    public void insertUpdate(DocumentEvent e) {
-		        try {
-					updatePetList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-
-		    public void removeUpdate(DocumentEvent e) {
-		        try {
-					updatePetList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-
-		    public void changedUpdate(DocumentEvent e) {
-		        try {
-					updatePetList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-		});
-		
 		JTextArea textAreaAddress = new JTextArea();
-		textAreaAddress.setBounds(111, 88, 351, 47);
+		textAreaAddress.setBounds(111, 114, 448, 47);
 		contentPane.add(textAreaAddress);
 		
 		JTextArea textAreaReason = new JTextArea();
-		textAreaReason.setBounds(111, 242, 351, 47);
+		textAreaReason.setBounds(111, 268, 448, 47);
 		contentPane.add(textAreaReason);
 		
 		JLabel lblAge_1_2 = new JLabel("Status");
 		lblAge_1_2.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblAge_1_2.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-		lblAge_1_2.setBounds(10, 179, 92, 18);
+		lblAge_1_2.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblAge_1_2.setBounds(10, 205, 92, 18);
 		contentPane.add(lblAge_1_2);
 		
 		JRadioButton rdbtnSingle = new JRadioButton("Single");
 		buttonGroupStatus.add(rdbtnSingle);
 		rdbtnSingle.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		rdbtnSingle.setBounds(111, 178, 69, 23);
+		rdbtnSingle.setBounds(111, 203, 69, 23);
 		contentPane.add(rdbtnSingle);
 		
 		JRadioButton rdbtnMarried = new JRadioButton("Married");
 		buttonGroupStatus.add(rdbtnMarried);
 		rdbtnMarried.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		rdbtnMarried.setBounds(182, 178, 70, 23);
+		rdbtnMarried.setBounds(182, 203, 70, 23);
 		contentPane.add(rdbtnMarried);
 		
-		JButton btnNewButton_2_1 = new JButton("Back");
-		btnNewButton_2_1.addActionListener(new ActionListener() {
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DBApp dbApp = new DBApp();
 				dbApp.setVisible(true);
@@ -269,257 +182,321 @@ public class PetAdoptionApplication extends JFrame {
 				dispose();
 			}
 		});
-		btnNewButton_2_1.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		btnNewButton_2_1.setBackground(Color.WHITE);
-		btnNewButton_2_1.setBounds(10, 627, 89, 23);
-		contentPane.add(btnNewButton_2_1);
+		btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		btnBack.setBackground(Color.WHITE);
+		btnBack.setBounds(10, 597, 89, 23);
+		contentPane.add(btnBack);
 		
 		JLabel lblPetCount_1_1 = new JLabel("<html>\r\n<div style='text-align: center;'>\r\nHandling<br> \r\nEmployee\r\n</div>\r\n</html>");
-		lblPetCount_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPetCount_1_1.setFont(new Font("Segoe UI", Font.PLAIN, 17));
+		lblPetCount_1_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblPetCount_1_1.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		lblPetCount_1_1.setBounds(10, 390, 92, 55);
 		contentPane.add(lblPetCount_1_1);
-		
-		JScrollPane scrollPaneFilter_1 = new JScrollPane();
-		scrollPaneFilter_1.setBounds(111, 364, 164, 102);
-		contentPane.add(scrollPaneFilter_1);
-		
-		JLabel lblEmployee_1_2 = new JLabel("Name");
-		lblEmployee_1_2.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblEmployee_1_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblEmployee_1_2.setBounds(264, 369, 92, 18);
-		contentPane.add(lblEmployee_1_2);
-		
-		JTextPane textPaneNameFilter_1 = new JTextPane();
-		textPaneNameFilter_1.setBounds(365, 367, 97, 23);
-		contentPane.add(textPaneNameFilter_1);
-		textPaneNameFilter_1.getDocument().addDocumentListener(new DocumentListener() {
-		    @Override
-		    public void insertUpdate(DocumentEvent e) {
-		        try {
-					updateEmployeeList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-
-		    @Override
-		    public void removeUpdate(DocumentEvent e) {
-		        try {
-					updateEmployeeList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-
-		    @Override
-		    public void changedUpdate(DocumentEvent e) {
-		        try {
-					updateEmployeeList();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-		    }
-
-		    private void updateEmployeeList() throws SQLException {
-		        String partialName = textPaneNameFilter_1.getText().trim();
-
-		        if (partialName.isEmpty()) {
-		            return;
-		        }
-
-		        DatabaseConnector dbConnector = new DatabaseConnector();
-
-		        Map<Integer, String> employeeNames = dbConnector.getEmployeeNamesByPartialName(partialName);
-
-		        JScrollPane scrollPane = (JScrollPane) scrollPaneFilter_1;
-		        JTextArea textArea = new JTextArea();
-		        textArea.setEditable(false); 
-
-		        StringBuilder namesText = new StringBuilder();
-		        if (employeeNames.isEmpty()) {
-		            namesText.append("No matching employees found.");
-		        } else {
-		            for (Map.Entry<Integer, String> entry : employeeNames.entrySet()) {
-		                int employeeId = entry.getKey();
-		                String fullName = entry.getValue();
-
-		                namesText.append(fullName).append(" (ID: ").append(employeeId).append(")\n");
-		            }
-		        }
-
-		        textArea.setText(namesText.toString());
-		        scrollPane.setViewportView(textArea);  
-		    }
-		});
-		
-		JButton btnApply = new JButton("Apply");
-		btnApply.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		btnApply.setBackground(Color.WHITE);
-		btnApply.setBounds(199, 595, 100, 35);
-		contentPane.add(btnApply);
 		
 		JRadioButton rdbtnMale = new JRadioButton("Male");
 		buttonGroupGender.add(rdbtnMale);
 		rdbtnMale.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		rdbtnMale.setBounds(321, 148, 69, 23);
+		rdbtnMale.setBounds(408, 174, 69, 23);
 		contentPane.add(rdbtnMale);
 		
 		JRadioButton rdbtnFemale = new JRadioButton("Female");
 		buttonGroupGender.add(rdbtnFemale);
 		rdbtnFemale.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		rdbtnFemale.setBounds(392, 148, 70, 23);
+		rdbtnFemale.setBounds(479, 174, 70, 23);
 		contentPane.add(rdbtnFemale);
 		
 		JRadioButton rdbtnLow = new JRadioButton("Low");
 		buttonGroupIncome.add(rdbtnLow);
 		rdbtnLow.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		rdbtnLow.setBounds(111, 301, 69, 23);
+		rdbtnLow.setBounds(111, 327, 69, 23);
 		contentPane.add(rdbtnLow);
 		
 		JRadioButton rdbtnMiddle = new JRadioButton("Middle");
 		buttonGroupIncome.add(rdbtnMiddle);
 		rdbtnMiddle.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		rdbtnMiddle.setBounds(182, 301, 70, 23);
+		rdbtnMiddle.setBounds(182, 327, 70, 23);
 		contentPane.add(rdbtnMiddle);
 		
 		JRadioButton rdbtnHigh = new JRadioButton("High");
 		buttonGroupIncome.add(rdbtnHigh);
 		rdbtnHigh.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		rdbtnHigh.setBounds(254, 301, 70, 23);
+		rdbtnHigh.setBounds(254, 327, 70, 23);
 		contentPane.add(rdbtnHigh);
+		
+		choiceBreed = new Choice();
+		choiceBreed.setBounds(452, 503, 97, 18);
+		contentPane.add(choiceBreed);
+		
+		choiceSpecies = new Choice();
+		choiceSpecies.setBounds(452, 478, 97, 20);
+		contentPane.add(choiceSpecies);
+		choiceSpecies.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                String selectedSpecies = choiceSpecies.getSelectedItem();
+                if (selectedSpecies != null && !selectedSpecies.isEmpty()) {
+                    populateBreedsChoice(selectedSpecies);
+                }
+            }
+        });
+		
+		Choice choicePetCount = new Choice();
+		choicePetCount.setBounds(111, 360, 97, 20);
+		contentPane.add(choicePetCount);
+		for (int i = 1; i <= 4; i++) {
+			choicePetCount.add(String.valueOf(i)); 
+        }
+		
+		JTextField textPaneFirstName = new JTextField();
+		textPaneFirstName.setBounds(112, 54, 447, 23);
+		contentPane.add(textPaneFirstName);
+		
+		JLabel lblLastName = new JLabel("Last Name");
+		lblLastName.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblLastName.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblLastName.setBounds(10, 86, 92, 18);
+		contentPane.add(lblLastName);
+		
+		JTextField textPaneLastName = new JTextField();
+		textPaneLastName.setBounds(111, 84, 448, 23);
+		contentPane.add(textPaneLastName);
+		
+		choiceEmployee = new Choice();
+		choiceEmployee.setBounds(111, 407, 164, 20);
+		contentPane.add(choiceEmployee);
+		
+		JButton btnFilter = new JButton("Filter");
+		btnFilter.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		btnFilter.setBackground(Color.WHITE);
+		btnFilter.setBounds(456, 529, 89, 23);
+		contentPane.add(btnFilter);
+		btnFilter.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String breedFilter = choiceBreed.getSelectedItem();
+		        String speciesFilter = choiceSpecies.getSelectedItem();
+		        String nameFilter = textPaneNameFilter.getText().toLowerCase();
+
+		        String sqlQuery = "SELECT pet_id, pet_name, breed, species, adoption_status FROM pet WHERE 1=1";
+
+		        if (!breedFilter.equals("All")) {  
+		            sqlQuery += " AND breed = ?";
+		        }
+		        if (!speciesFilter.equals("All")) { 
+		            sqlQuery += " AND species = ?";
+		        }
+		        if (!nameFilter.isEmpty()) {
+		            sqlQuery += " AND LOWER(pet_name) LIKE ?";
+		        }
+
+		        try (Connection conn = dbConnector.getConnection()) {
+		            PreparedStatement stmt = conn.prepareStatement(sqlQuery);
+
+		            int paramIndex = 1;
+		            if (!breedFilter.equals("All")) {
+		                stmt.setString(paramIndex++, breedFilter);
+		            }
+		            if (!speciesFilter.equals("All")) {
+		                stmt.setString(paramIndex++, speciesFilter);
+		            }
+		            if (!nameFilter.isEmpty()) {
+		                stmt.setString(paramIndex++, nameFilter + "%");
+		            }
+
+		            ResultSet rs = stmt.executeQuery();
+
+		            DefaultTableModel model = new DefaultTableModel(new String[]{"Pet ID", "Pet Name", "Breed", "Species", "Adoption Status"}, 0);
+
+		            while (rs.next()) {
+		                int petId = rs.getInt("pet_id");
+		                String petName = rs.getString("pet_name");
+		                String breed = rs.getString("breed");
+		                String species = rs.getString("species");
+		                String adoptionStatus = rs.getString("adoption_status");
+
+		                model.addRow(new Object[]{petId, petName, breed, species, adoptionStatus});
+		            }
+
+		            JTable table = new JTable(model);
+		            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		            scrollPanePet.setViewportView(table);
+
+		        } catch (SQLException ex) {
+		            JOptionPane.showMessageDialog(null, "Error fetching pet data: " + ex.getMessage());
+		            ex.printStackTrace();
+		        }
+		    }
+		});
+
+		populateEmployeeChoice();
+        populateSpeciesChoice();
+        
+        JButton btnApply = new JButton("Apply");
+		btnApply.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		btnApply.setBackground(Color.WHITE);
+		btnApply.setBounds(200, 562, 100, 35);
+		contentPane.add(btnApply);
 		btnApply.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	String adopterType = "adopter";
-		        String name = textPaneName.getText();
-		        String[] nameParts = name.split(" ");
-		        String firstName = "";
-		        String lastName = "";
-		        if (nameParts.length == 1) {
-		            firstName = nameParts[0];
-		            lastName = "";  
-		        } else if (nameParts.length >= 2) {
-		            firstName = nameParts[0];  
-		            lastName = nameParts[nameParts.length - 1]; 
+		        String firstName = textPaneFirstName.getText().trim();
+		        String lastName = textPaneLastName.getText().trim();
+		        String address = textAreaAddress.getText().trim();
+		        String ageText = textPaneAge.getText().trim();
+		        String contact = textPaneContact.getText().trim();
+		        String reason = textAreaReason.getText().trim();
+		        int age = 0;
+		        try {
+		            if (!ageText.isEmpty()) {
+		                age = Integer.parseInt(ageText);
+		                if (age < 12 || age > 80) {
+		                    JOptionPane.showMessageDialog(null, "Age must be between 12 and 80.");
+		                    return;
+		                }
+		            } else {
+		                JOptionPane.showMessageDialog(null, "Age cannot be empty.");
+		                return;
+		            }
+		        } catch (NumberFormatException ex) {
+		            JOptionPane.showMessageDialog(null, "Please enter a valid numeric age.");
+		            return;
 		        }
-		        String address = textAreaAddress.getText();
-		        String reason = textAreaReason.getText();
-		        String ageText = textPaneAge.getText();
-	        	String sex = null;
-		        if (rdbtnMale.isSelected()) 
-		        	sex = "male";
-				else if (rdbtnFemale.isSelected()) 
-					sex = "female";
-		    	else JOptionPane.showMessageDialog(PetAdoptionApplication.this, "Please choose gender.");
-		    	
-		        String contact = textPaneContact.getText();
-		        
-		        String income = null;
-		        if (rdbtnLow.isSelected()) 
-		        	income = "low";
-				else if (rdbtnMiddle.isSelected()) 
-					income = "middle";
-		    	else if (rdbtnHigh.isSelected()) 
-					income = "high";
-		    	else JOptionPane.showMessageDialog(PetAdoptionApplication.this, "Please choose income level.");
-		    	
-		        
-		        String petCountText = textPanePetCount.getText();
-				if (selectedEmployeeId != -1) 
-		            System.out.println("Selected Employee ID: " + selectedEmployeeId);
-		        else JOptionPane.showMessageDialog(PetAdoptionApplication.this, "Please select an employee.");
-				
-				if (selectedPetId != -1) 
-		            System.out.println("Selected Pet ID: " + selectedPetId);
-		        else JOptionPane.showMessageDialog(PetAdoptionApplication.this, "Please select a pet.");
-		        
-				
-				String status = null;
-				if (rdbtnSingle.isSelected())
-					status = "single";
-				else if (rdbtnMarried.isSelected()) 
-					status = "married";
-		    	else JOptionPane.showMessageDialog(PetAdoptionApplication.this, "Please choose civil status.");
-		
-		        int adopterId = 1; 
-		        
-		        String adoptionDate = "2024-11-16";
 
-		        double adoptionFee = 100.00; 
+		        String sex = rdbtnMale.isSelected() ? "Male" : "Female";
+		        String status = rdbtnSingle.isSelected() ? "Single" : "Married";
+		        String incomeLevel = rdbtnLow.isSelected() ? "Low" :
+		                             rdbtnMiddle.isSelected() ? "Middle" : "High";
+		        int petCount = Integer.parseInt(choicePetCount.getSelectedItem().toString());
+		        String selectedEmployee = choiceEmployee.getSelectedItem().toString();
 
-		        DatabaseConnector dbConnector = new DatabaseConnector();
-		        boolean success = false;
-				try {
-					int employeeId = selectedEmployeeId;
-					int petId = selectedPetId;
-					success = dbConnector.insertAdoptionRecord(petId, adopterId, employeeId, adoptionDate, adoptionFee, reason);
-					boolean adopterSuccess = dbConnector.insertAdopter("adopter", firstName, lastName, Integer.parseInt(ageText), sex, Integer.parseInt(petCountText), address, income, contact, status, reason);
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+		        String[] parts = selectedEmployee.split(" - ");
+		        int employeeId = Integer.parseInt(parts[0]);
 
-		        if (success) 
-		            JOptionPane.showMessageDialog(null, "Adoption record added successfully.");
-		        else JOptionPane.showMessageDialog(null, "Failed to add adoption record.");
-		        
+		        JTable petTable = (JTable) scrollPanePet.getViewport().getView();
+		        int selectedRow = petTable.getSelectedRow();
+		        if (selectedRow == -1) {
+		            JOptionPane.showMessageDialog(null, "Please select a pet.");
+		            return;
+		        }
+		        int petId = (int) petTable.getValueAt(selectedRow, 0);
+
+		        double adoptionFee = 1500;
+		        java.sql.Date adoptionDate = new java.sql.Date(System.currentTimeMillis());
+
+		        String checkPetStatusQuery = "SELECT adoption_status FROM pet WHERE pet_id = ?";
+		        String updatePetStatusQuery = "UPDATE pet SET adoption_status = 'adopted' WHERE pet_id = ?";
+		        String insertAdopterQuery = "INSERT INTO adopter (first_name, last_name, age, sex, civil_status, address, contact_number, income_level, reason, pet_count) " +
+		                                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		        String insertAdoptionQuery = "INSERT INTO adoption (pet_id, adopter_id, employee_id, adoption_date, adoption_fee) " +
+		                                     "VALUES (?, ?, ?, ?, ?)";
+
+		        try (Connection conn = dbConnector.getConnection()) {
+		            PreparedStatement checkStmt = conn.prepareStatement(checkPetStatusQuery);
+		            checkStmt.setInt(1, petId);
+		            ResultSet rs = checkStmt.executeQuery();
+
+		            if (rs.next()) {
+		                String adoptionStatus = rs.getString("adoption_status");
+		                if (!adoptionStatus.equals("available") && !adoptionStatus.equals("returned")) {
+		                    JOptionPane.showMessageDialog(null, "The selected pet is not available for adoption.");
+		                    return;
+		                }
+		            } else {
+		                JOptionPane.showMessageDialog(null, "The selected pet does not exist.");
+		                return;
+		            }
+
+		            PreparedStatement pstmtAdopter = conn.prepareStatement(insertAdopterQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+		            pstmtAdopter.setString(1, firstName);
+		            pstmtAdopter.setString(2, lastName);
+		            pstmtAdopter.setInt(3, age);
+		            pstmtAdopter.setString(4, sex);
+		            pstmtAdopter.setString(5, status);
+		            pstmtAdopter.setString(6, address);
+		            pstmtAdopter.setString(7, contact);
+		            pstmtAdopter.setString(8, incomeLevel);
+		            pstmtAdopter.setString(9, reason);
+		            pstmtAdopter.setInt(10, petCount);
+
+		            int affectedRows = pstmtAdopter.executeUpdate();
+		            if (affectedRows == 0) {
+		                throw new SQLException("Inserting adopter failed, no rows affected.");
+		            }
+
+		            ResultSet generatedKeys = pstmtAdopter.getGeneratedKeys();
+		            int adopterId = -1;
+		            if (generatedKeys.next()) {
+		                adopterId = generatedKeys.getInt(1);
+		            }
+
+		            PreparedStatement pstmtAdoption = conn.prepareStatement(insertAdoptionQuery);
+		            pstmtAdoption.setInt(1, petId);
+		            pstmtAdoption.setInt(2, adopterId);
+		            pstmtAdoption.setInt(3, employeeId);
+		            pstmtAdoption.setDate(4, adoptionDate);
+		            pstmtAdoption.setDouble(5, adoptionFee);
+		            pstmtAdoption.executeUpdate();
+
+		            PreparedStatement updateStmt = conn.prepareStatement(updatePetStatusQuery);
+		            updateStmt.setInt(1, petId);
+		            updateStmt.executeUpdate();
+
+		            JOptionPane.showMessageDialog(null, "Adoption and adopter records have been successfully added, and the pet status updated!");
+
+		        } catch (SQLException ex) {
+		            ex.printStackTrace();
+		            JOptionPane.showMessageDialog(null, "Error occurred while saving the adoption: " + ex.getMessage());
+		        }
 		    }
 		});
 	}
-	
-	private void updatePetList() throws SQLException {
-	    if (textPaneNameFilter == null || scrollPaneFilter == null) {
-	        System.out.println("textPaneNameFilter or scrollPaneFilter is not initialized!");
-	        return;
-	    }
+    
+    private void populateSpeciesChoice() {
+        String query = "SELECT DISTINCT species FROM pet"; 
+        
+        try (Connection conn = dbConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
-	    String nameFilter = textPaneNameFilter.getText().trim();
-	    String breedFilter = textPaneBreedFilter.getText().trim();
-	    String speciesFilter = textPaneSpeciesFilter.getText().trim();
+            while (rs.next()) {
+                String species = rs.getString("species");
+                choiceSpecies.add(species);  
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace(); 
+        }
+    }
+    
+    private void populateBreedsChoice(String species) {
+		choiceBreed.removeAll();
+		choiceBreed.add("All"); 
+		try (Connection conn = dbConnector.getConnection()) {
+			String sqlQuery = "SELECT DISTINCT breed FROM pet WHERE species = ?";
+			PreparedStatement stmt = conn.prepareStatement(sqlQuery);
+			stmt.setString(1, species);
+			ResultSet rs = stmt.executeQuery();
 
-	    if (nameFilter.isEmpty() && breedFilter.isEmpty() && speciesFilter.isEmpty()) {
-	        return;  
-	    }
-
-	    DatabaseConnector dbConnector = new DatabaseConnector();
-
-	    Map<Integer, String> petList = dbConnector.getPetsByFilters(nameFilter, breedFilter, speciesFilter);
-
-	    JTextArea textArea = new JTextArea();
-	    textArea.setEditable(false);  
-
-	    StringBuilder petsText = new StringBuilder();
-	    if (petList.isEmpty()) {
-	        petsText.append("No matching pets found.");
-	    } else {
-	        for (Map.Entry<Integer, String> entry : petList.entrySet()) {
-	            int petId = entry.getKey();
-	            String petDetails = entry.getValue();
-
-	            // Add pet details to the text
-	            petsText.append(petDetails).append(" (ID: ").append(petId).append(")\n");
-	        }
-	    }
-
-	    textArea.setText(petsText.toString());
-
-	    scrollPaneFilter.setViewportView(textArea);  
-
-	    textArea.addMouseListener(new MouseAdapter() {
-	        @Override
-	        public void mouseClicked(MouseEvent e) {
-	            String selectedText = textArea.getSelectedText();
-	            if (selectedText != null && !selectedText.isEmpty()) {
-	                String[] parts = selectedText.split(" \\(ID: ");
-	                if (parts.length > 1) {
-	                    String idString = parts[1].replace(")", "");
-	                    try {
-	                        selectedPetId = Integer.parseInt(idString);
-	                    } catch (NumberFormatException ex) {
-	                        ex.printStackTrace();
-	                    }
-	                }
-	            }
-	        }
-	    });
+			while (rs.next()) {
+				choiceBreed.add(rs.getString("breed"));
+			}
+		} catch (SQLException ex) {
+			JOptionPane.showMessageDialog(null, "Error fetching breeds: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
+    
+    private void populateEmployeeChoice() {
+        try (Connection conn = dbConnector.getConnection()) {
+            String sqlQuery = "SELECT employee_id, first_name, last_name FROM employee";
+            PreparedStatement stmt = conn.prepareStatement(sqlQuery);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int employeeId = rs.getInt("employee_id");
+                String fullName = rs.getString("first_name") + " " + rs.getString("last_name");
+                choiceEmployee.add(String.format("%d - %s", employeeId, fullName));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error fetching employee data.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

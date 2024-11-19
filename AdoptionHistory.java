@@ -17,6 +17,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JTextField;
 
 public class AdoptionHistory extends JFrame {
 
@@ -30,7 +31,7 @@ public class AdoptionHistory extends JFrame {
      */
     public AdoptionHistory() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 515, 600);
+        setBounds(100, 100, 840, 605);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -40,31 +41,31 @@ public class AdoptionHistory extends JFrame {
         JLabel lblAdoptionHistory = new JLabel("Adoption History");
         lblAdoptionHistory.setHorizontalAlignment(SwingConstants.CENTER);
         lblAdoptionHistory.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblAdoptionHistory.setBounds(10, 11, 479, 32);
+        lblAdoptionHistory.setBounds(10, 11, 804, 32);
         contentPane.add(lblAdoptionHistory);
         
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(10, 54, 479, 349);
+        scrollPane.setBounds(10, 54, 804, 349);
         contentPane.add(scrollPane);
         
         JLabel lblYear = new JLabel("Year");
         lblYear.setHorizontalAlignment(SwingConstants.RIGHT);
         lblYear.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        lblYear.setBounds(60, 437, 92, 18);
+        lblYear.setBounds(223, 437, 92, 18);
         contentPane.add(lblYear);
         
-        JTextPane textPaneYear = new JTextPane();
-        textPaneYear.setBounds(161, 435, 177, 23);
+        JTextField textPaneYear = new JTextField();
+        textPaneYear.setBounds(324, 435, 177, 23);
         contentPane.add(textPaneYear);
         
         JLabel lblMonth = new JLabel("Month");
         lblMonth.setHorizontalAlignment(SwingConstants.RIGHT);
         lblMonth.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        lblMonth.setBounds(60, 471, 92, 18);
+        lblMonth.setBounds(223, 471, 92, 18);
         contentPane.add(lblMonth);
         
-        JTextPane textPaneMonth = new JTextPane();
-        textPaneMonth.setBounds(161, 469, 177, 23);
+        JTextField textPaneMonth = new JTextField();
+        textPaneMonth.setBounds(324, 469, 177, 23);
         contentPane.add(textPaneMonth);
         
         // Back Button
@@ -78,7 +79,7 @@ public class AdoptionHistory extends JFrame {
         });
         btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         btnBack.setBackground(Color.WHITE);
-        btnBack.setBounds(10, 527, 89, 23);
+        btnBack.setBounds(10, 532, 89, 23);
         contentPane.add(btnBack);
         
         JButton btnLoadHistory = new JButton("Load History");
@@ -109,7 +110,7 @@ public class AdoptionHistory extends JFrame {
                 }
             }
         });
-        btnLoadHistory.setBounds(189, 506, 120, 23);
+        btnLoadHistory.setBounds(352, 506, 120, 23);
         contentPane.add(btnLoadHistory);
     }
     
