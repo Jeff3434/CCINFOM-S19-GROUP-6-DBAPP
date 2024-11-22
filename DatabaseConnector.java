@@ -68,7 +68,7 @@ public class DatabaseConnector {
         return stmt.executeQuery();
     }
 
-    public ResultSet fetchEmployeeAdoptionData(String employeeName) throws SQLException {
+    public ResultSet fetchEmployeeAdoptionData(int employeeId) throws SQLException {
         String sql = "SELECT e.employee_id, "
                    + "e.first_name AS employee_first_name, "
                    + "e.last_name AS employee_last_name, "
@@ -80,17 +80,14 @@ public class DatabaseConnector {
                    + "FROM adoption a "
                    + "JOIN pet p ON a.pet_id = p.pet_id "
                    + "JOIN employee e ON a.employee_id = e.employee_id "
-                   + "WHERE e.first_name || ' ' || e.last_name = ? "
+                   + "WHERE e.employee_id = ? "
                    + "ORDER BY e.employee_id, p.adoption_status DESC";
 
         Connection conn = getConnection();  // Make sure your connection method works correctly
         PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, employeeName);  // Set employee name in the query
-        
+        stmt.setInt(1, employeeId);  // Set employee id in the query
         return stmt.executeQuery();  // Return the result set
     }
-
-
 
     public ResultSet fetchAdoptionTrends(int year, int month) throws SQLException {
         String sql = "SELECT YEAR(a.adoption_date) AS adoption_year, "
