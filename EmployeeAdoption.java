@@ -75,7 +75,7 @@ public class EmployeeAdoption extends JFrame {
                     
                     try {
                         // Fetch employee adoption data using employeeName
-                        ResultSet resultSet = dbConnector.fetchEmployeeAdoptionData(employeeName);
+                        ResultSet resultSet = dbConnector.fetchEmployeeAdoptionData(employeeId);
 
                         // Display the adoption data in the employeeAdoptionTable
                         employeeAdoptionTable = new JTable(buildTableModel(resultSet));
