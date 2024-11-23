@@ -37,7 +37,6 @@ public class PetReturnApplication extends JFrame {
 	private Choice choiceSpecies;
 	private Choice choiceAdopter;
 	private DatabaseConnector dbConnector = new DatabaseConnector();
-
 	
 	public PetReturnApplication() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -262,6 +261,12 @@ public class PetReturnApplication extends JFrame {
 		btnApply.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        JTable petTable = (JTable) scrollPanePet.getViewport().getView();
+		        
+		        if (petTable == null) {
+		            JOptionPane.showMessageDialog(null, "Search for a pet.");
+		            return;
+		        }
+		        
 		        int selectedRow = petTable.getSelectedRow();
 		        
 		        if (selectedRow == -1) {
@@ -348,9 +353,6 @@ public class PetReturnApplication extends JFrame {
 		        }
 		    }
 		});
-
-
-
 	}
 	
     private void populateSpeciesChoice() {

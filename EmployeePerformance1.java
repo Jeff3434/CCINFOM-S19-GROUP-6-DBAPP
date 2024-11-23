@@ -1,15 +1,20 @@
 package app;
 
+import javax.swing.*;
+import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.JTextArea;
@@ -21,8 +26,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 
 public class EmployeePerformance extends JFrame {
 
@@ -30,9 +33,12 @@ public class EmployeePerformance extends JFrame {
 	private JPanel contentPane;
 	private DatabaseConnector dbConnector = new DatabaseConnector();
 
+	/**
+	 * Create the frame.
+	 */
 	public EmployeePerformance() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 520, 615);
+		setBounds(100, 100, 515, 615);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -46,89 +52,61 @@ public class EmployeePerformance extends JFrame {
 		contentPane.add(lblEmployeeReview);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(111, 108, 296, 111);
+		scrollPane.setBounds(92, 108, 315, 111);
 		contentPane.add(scrollPane);
 		
-		JTextField textFieldName = new JTextField();
-		textFieldName.setBounds(111, 74, 296, 23);
-		contentPane.add(textFieldName);
+		JTextPane textPaneName = new JTextPane();
+		textPaneName.setBounds(111, 74, 218, 23);
+		contentPane.add(textPaneName);
 		
-		JLabel lblName = new JLabel("Name");
+		JLabel lblName = new JLabel("Name:");
 		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblName.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblName.setFont(new Font("Segoe UI", Font.PLAIN, 17));
 		lblName.setBounds(10, 76, 92, 18);
 		contentPane.add(lblName);
 		
-		JLabel lblTotalAdoptions = new JLabel("Adoptions Handled:");
+		JLabel lblTotalAdoptions = new JLabel("Hours Worked:");
 		lblTotalAdoptions.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTotalAdoptions.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblTotalAdoptions.setFont(new Font("Segoe UI", Font.PLAIN, 17));
 		lblTotalAdoptions.setBounds(10, 241, 159, 18);
 		contentPane.add(lblTotalAdoptions);
 		
-		JLabel lblPerformanceScore = new JLabel("Performance Score:");
+		JLabel lblPerformanceScore = new JLabel("Adoptions Handled:");
 		lblPerformanceScore.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblPerformanceScore.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblPerformanceScore.setFont(new Font("Segoe UI", Font.PLAIN, 17));
 		lblPerformanceScore.setBounds(10, 299, 159, 18);
 		contentPane.add(lblPerformanceScore);
 		
-		JLabel lblBonusPenalty = new JLabel("Bonus:");
+		JLabel lblBonusPenalty = new JLabel("Returning Adopters:");
 		lblBonusPenalty.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblBonusPenalty.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblBonusPenalty.setFont(new Font("Segoe UI", Font.PLAIN, 17));
 		lblBonusPenalty.setBounds(10, 328, 159, 18);
 		contentPane.add(lblBonusPenalty);
 		
-		JLabel lblReviewNotes = new JLabel("Notes");
+		JLabel lblReviewNotes = new JLabel("Notes:");
 		lblReviewNotes.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblReviewNotes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		lblReviewNotes.setBounds(10, 379, 159, 18);
+		lblReviewNotes.setFont(new Font("Segoe UI", Font.PLAIN, 17));
+		lblReviewNotes.setBounds(10, 357, 159, 18);
 		contentPane.add(lblReviewNotes);
 		
-		JLabel lblAdoptions = new JLabel("Adoptions");
-		lblAdoptions.setHorizontalAlignment(SwingConstants.LEFT);
-		lblAdoptions.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		lblAdoptions.setBounds(179, 241, 159, 18);
-		contentPane.add(lblAdoptions);
-		
-		JLabel lblScore = new JLabel("Score");
-		lblScore.setHorizontalAlignment(SwingConstants.LEFT);
-		lblScore.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		lblScore.setBounds(179, 299, 159, 18);
-		contentPane.add(lblScore);
-		
-		JLabel lblBonus = new JLabel("Bonus");
-		lblBonus.setHorizontalAlignment(SwingConstants.LEFT);
-		lblBonus.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		lblBonus.setBounds(179, 328, 159, 18);
-		contentPane.add(lblBonus);
-		
-		JLabel lblSuccesRate = new JLabel("Succes Rate:");
+		JLabel lblSuccesRate = new JLabel("Role");
 		lblSuccesRate.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblSuccesRate.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblSuccesRate.setFont(new Font("Segoe UI", Font.PLAIN, 17));
 		lblSuccesRate.setBounds(10, 270, 159, 18);
 		contentPane.add(lblSuccesRate);
 		
-		JLabel lblSuccessRate = new JLabel("SuccessRate");
-		lblSuccessRate.setHorizontalAlignment(SwingConstants.LEFT);
-		lblSuccessRate.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		lblSuccessRate.setBounds(179, 270, 159, 18);
-		contentPane.add(lblSuccessRate);		
+		JTextArea textArea_1 = new JTextArea();
+		textArea_1.setBounds(179, 430, 260, 62);
+		contentPane.add(textArea_1);
 		
-		JTextArea textAreaNotes = new JTextArea();
-		textAreaNotes.setBounds(180, 357, 260, 62);
-		contentPane.add(textAreaNotes);
+		JLabel lblEmployee_1_2 = new JLabel("Status");
+		lblEmployee_1_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEmployee_1_2.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		lblEmployee_1_2.setBounds(203, 549, 92, 18);
+		contentPane.add(lblEmployee_1_2);
 		
-		JLabel lblThissReviewNotes = new JLabel("Review Notes");
-		lblThissReviewNotes.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblThissReviewNotes.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		lblThissReviewNotes.setBounds(10, 452, 159, 18);
-		contentPane.add(lblThissReviewNotes);
-		
-		JTextArea textAreaRevNotes = new JTextArea();
-		textAreaRevNotes.setBounds(179, 430, 260, 62);
-		contentPane.add(textAreaRevNotes);
-		
-		JButton btnBack = new JButton("Back");
-		btnBack.addActionListener(new ActionListener() {
+		JButton btnNewButton_2_1 = new JButton("Back");
+		btnNewButton_2_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DBApp dbApp = new DBApp();
 				dbApp.setVisible(true);
@@ -136,57 +114,87 @@ public class EmployeePerformance extends JFrame {
 				dispose();
 			}
 		});
-		btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		btnBack.setBackground(Color.WHITE);
-		btnBack.setBounds(10, 548, 89, 23);
-		contentPane.add(btnBack);
+		btnNewButton_2_1.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		btnNewButton_2_1.setBackground(Color.WHITE);
+		btnNewButton_2_1.setBounds(10, 548, 89, 23);
+		contentPane.add(btnNewButton_2_1);
 		
 		JButton btnApply = new JButton("Apply");
 		btnApply.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		btnApply.setBackground(Color.WHITE);
 		btnApply.setBounds(199, 503, 100, 35);
 		contentPane.add(btnApply);
+	
+		JLabel lblAdoptions = new JLabel();
+		lblAdoptions.setHorizontalAlignment(SwingConstants.LEFT);
+		lblAdoptions.setFont(new Font("Segoe UI", Font.PLAIN, 17));
+		lblAdoptions.setBounds(179, 241, 159, 18);
+		contentPane.add(lblAdoptions);
+        
+		JLabel lblAdoptions_1 = new JLabel();
+		lblAdoptions_1.setHorizontalAlignment(SwingConstants.LEFT);
+		lblAdoptions_1.setFont(new Font("Segoe UI", Font.PLAIN, 17));
+		lblAdoptions_1.setBounds(179, 270, 159, 18);
+		contentPane.add(lblAdoptions_1);
+		 
+		JLabel lblScore = new JLabel();
+		lblScore.setHorizontalAlignment(SwingConstants.LEFT);
+		lblScore.setFont(new Font("Segoe UI", Font.PLAIN, 17));
+		lblScore.setBounds(179, 299, 159, 18);
+		contentPane.add(lblScore);
 		
-		JButton btnSearch = new JButton("Search");
-		btnSearch.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		btnSearch.setBounds(417, 74, 67, 23);
-		contentPane.add(btnSearch);
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				List<String> list = doesEmployeeExist(textFieldName.getText());
-				String[] listData = list.toArray(new String[0]);
-        		JList<String> jlist = new JList<>(listData);
-	            jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
-	            jlist.setLayoutOrientation(JList.VERTICAL);
-	            scrollPane.setViewportView(jlist);
-	            
-	            jlist.addListSelectionListener(l -> {
-	            	if (!l.getValueIsAdjusting()) {
-	            		String selectedValue = jlist.getSelectedValue();
-	            		if (selectedValue != null) {
-	            			lblSuccessRate.setText(getHoursworked(selectedValue));
-	            			lblAdoptions.setText(getRole(selectedValue));
-				        	lblScore.setText(getTotalAdoptions(selectedValue));
-				        	lblBonus.setText(getReturnees(selectedValue));
-				        	btnApply.addActionListener(new ActionListener() {
-				    			public void actionPerformed(ActionEvent e) {
-				    				String notesText = textAreaRevNotes.getText();
-				    				
-				    				if (!notesText.isEmpty()) {
-				    					JOptionPane.showMessageDialog(null, "Review notes is empty.");
-				    					return;
-				    				} else {
-				    					JOptionPane.showMessageDialog(null, updateEmployeeNotes(selectedValue, notesText));
-				    				}
-				    			}
-				    		});
-	            		}
-	            	}
-	            });
-			}
-		});
+		JLabel lblBonus = new JLabel();
+		lblBonus.setHorizontalAlignment(SwingConstants.LEFT);
+		lblBonus.setFont(new Font("Segoe UI", Font.PLAIN, 17));
+		lblBonus.setBounds(179, 328, 159, 18);
+		contentPane.add(lblBonus); 
+		
+		//Adds the Search Button
+//		JButton searchBtn = new JButton("Search");
+//		searchBtn.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				List<String> list = doesEmployeeExist(textPaneName.getText());
+//				String[] listData = list.toArray(new String[0]);
+//        		JList<String> jlist = new JList<>(listData);
+//	            jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Single selection
+//	            jlist.setLayoutOrientation(JList.VERTICAL); // Display items vertically
+//	            scrollPane.setViewportView(jlist);
+//	            
+//	            //jlist action listener for action performed
+//	             jlist.addListSelectionListener(l -> {
+//    					if (!l.getValueIsAdjusting()) { // To avoid handling intermediate states
+//        				String selectedValue = jlist.getSelectedValue();
+//				        if (selectedValue != null) {
+//				        	lblAdoptions.setText(getHoursworked(selectedValue));
+//				        	lblAdoptions_1.setText(getRole(selectedValue));
+//				        	lblScore.setText(getTotalAdoptions(selectedValue));
+//				        	lblBonus.setText(getReturnees(selectedValue));
+//				        
+//				        	btnApply.addActionListener(new ActionListener() {
+//				    		public void actionPerformed(ActionEvent e) {
+//				    		String notesText = textArea_1.getText();
+//				    				
+//				    		if (!notesText.isEmpty()) {
+//				    		         JOptionPane.showMessageDialog(null, "Notes is empty");
+//				    		         return;
+//				    		}
+//				    		else {
+//				    		    	JOptionPane.showMessageDialog(null, updateEmployeeNotes(selectedValue, notesText));
+//				    		}
+//		    			}
+//				        }
+//				        }
+//    					});
+//	             }
+//			});
+//		searchBtn.setBounds(339, 74, 89, 23);
+//		contentPane.add(searchBtn);
+//		}
 	}
 	
+	
+		// add a search button beside the textbox
+		// return a list of employees
 	private List<String> doesEmployeeExist(String employeeName) {
 		String employeeNm = employeeName.trim();
 		String sqlQuery = "SELECT first_name, last_name FROM employee WHERE first_name = ?";
@@ -199,6 +207,7 @@ public class EmployeePerformance extends JFrame {
     	try (ResultSet rs = pstmt.executeQuery()) {
     		
     		while (rs.next()) {
+    			// add the results to the listbox below the search field
     			list.add(rs.getString("first_name") + " " + rs.getString("last_name"));
     		}
             
@@ -208,8 +217,9 @@ public class EmployeePerformance extends JFrame {
 		}
 		return list;
 	}
-	
-	private String getHoursworked(String employeeName){
+		
+	//get the hours worked of the employee
+  	private String getHoursworked(String employeeName){
  		String sqlQuery = "SELECT number_of_hours_worked" 
  						+ "FROM employee e" 
  						+ "WHERE first_name = ? AND last_name = ?";
@@ -218,11 +228,11 @@ public class EmployeePerformance extends JFrame {
 				PreparedStatement pstmt = conn.prepareStatement(sqlQuery); 
 				String[] nameParts = employeeName.split(" ");
 				if (nameParts.length == 2) {
-				    pstmt.setString(1, nameParts[0]); 
-				    pstmt.setString(2, nameParts[1]); 
+				    pstmt.setString(1, nameParts[0]); // First name
+				    pstmt.setString(2, nameParts[1]); // Last name
 				}
 					
-				try (ResultSet rs = pstmt.executeQuery()) {
+				try(ResultSet rs = pstmt.executeQuery()) {
 					if(rs.next()) {
 						return rs.getString("number_of_hours_worked") + "Hours";
 					}
@@ -235,15 +245,16 @@ public class EmployeePerformance extends JFrame {
 		    	}
 		    	return "ERROR";
  	}
-	
-	private String getRole(String employeeName){
+ 	
+  	//get the role of the employee
+ 	private String getRole(String employeeName){
  		String sqlQuery = "SELECT role FROM employee e WHERE first_name = ? AND last_name = ?";
 		 try (Connection conn = dbConnector.getConnection()){
 				PreparedStatement pstmt = conn.prepareStatement(sqlQuery); 
 				String[] nameParts = employeeName.split(" ");
 				if (nameParts.length == 2) {
-				    pstmt.setString(1, nameParts[0]); 
-				    pstmt.setString(2, nameParts[1]); 
+				    pstmt.setString(1, nameParts[0]); // First name
+				    pstmt.setString(2, nameParts[1]); // Last name
 				}
 				try(ResultSet rs = pstmt.executeQuery()) {
 					if(rs.next()) {
@@ -258,7 +269,8 @@ public class EmployeePerformance extends JFrame {
 		    	}
 		    	return "ERROR";
  	}
-	
+ 	
+ 	//get total adoptions facilitated by employee
 	private String getTotalAdoptions(String employeeName) {
 		String sqlQuery = "SELECT COUNT(a.adoption_id) as total_adoptions"
 						+ "FROM employee e"
@@ -270,8 +282,8 @@ public class EmployeePerformance extends JFrame {
 			pstmt.setString(1, employeeName);
 			String[] nameParts = employeeName.split(" ");
 			if (nameParts.length == 2) {
-			    pstmt.setString(1, nameParts[0]); 
-			    pstmt.setString(2, nameParts[1]); 
+			    pstmt.setString(1, nameParts[0]); // First name
+			    pstmt.setString(2, nameParts[1]); // Last name
 			}
 			
 			try(ResultSet rs = pstmt.executeQuery()) {
@@ -289,6 +301,7 @@ public class EmployeePerformance extends JFrame {
     	return "ERROR";
 	}
 	
+	//returns for adoptions facilitated by the employee.
 	private String getReturnees (String employeeName){
 		String sqlQuery = "SELECT e.employee_id, e.first_name, e.last_name, COUNT(DISTINCT a.adopter_id) AS total_returning_visits"
 						   + "FROM employee e"
@@ -301,8 +314,8 @@ public class EmployeePerformance extends JFrame {
 			PreparedStatement pstmt = conn.prepareStatement(sqlQuery); 
 			String[] nameParts = employeeName.split(" ");
 			if (nameParts.length == 2) {
-			    pstmt.setString(1, nameParts[0]); 
-			    pstmt.setString(2, nameParts[1]); 
+			    pstmt.setString(1, nameParts[0]); // First name
+			    pstmt.setString(2, nameParts[1]); // Last name
 			}
 			
 			try(ResultSet rs = pstmt.executeQuery()) {
@@ -321,19 +334,22 @@ public class EmployeePerformance extends JFrame {
     	
 	}
 	
+	//updates the employee notes
 	private String updateEmployeeNotes(String employeeName, String notesText) {
 	    String sqlQuery = "UPDATE employee SET notes = ? WHERE first_name = ? AND last_name = ?";
 
 	    try (Connection conn = dbConnector.getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(sqlQuery)) {
 
-	        pstmt.setString(1, notesText); 
+	        // Set the parameters
+	        pstmt.setString(1, notesText);  // Set notes
 	        String[] nameParts = employeeName.split(" ");
 			if (nameParts.length == 2) {
-			    pstmt.setString(1, nameParts[0]); 
-			    pstmt.setString(2, nameParts[1]); 
+			    pstmt.setString(1, nameParts[0]); // First name
+			    pstmt.setString(2, nameParts[1]); // Last name
 			}
 
+	        // Execute the update
 	        int rowsUpdated = pstmt.executeUpdate();
 	        if (rowsUpdated > 0) {
 	            return "Notes updated successfully";
@@ -345,3 +361,6 @@ public class EmployeePerformance extends JFrame {
 	    return "Error";
 	}
 }
+	
+	
+

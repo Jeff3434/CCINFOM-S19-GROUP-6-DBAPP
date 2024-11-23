@@ -10,7 +10,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.JTable;
@@ -26,9 +25,6 @@ public class AdoptionHistory extends JFrame {
     private DatabaseConnector dbConnector = new DatabaseConnector();
     private JTable adoptionTable;
 
-    /**
-     * Create the frame.
-     */
     public AdoptionHistory() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 840, 605);
@@ -68,7 +64,6 @@ public class AdoptionHistory extends JFrame {
         textPaneMonth.setBounds(324, 469, 177, 23);
         contentPane.add(textPaneMonth);
         
-        // Back Button
         JButton btnBack = new JButton("Back");
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

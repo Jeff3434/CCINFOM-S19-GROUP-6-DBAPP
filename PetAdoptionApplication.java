@@ -343,6 +343,28 @@ public class PetAdoptionApplication extends JFrame {
 		        String ageText = textPaneAge.getText().trim();
 		        String contact = textPaneContact.getText().trim();
 		        String reason = textAreaReason.getText().trim();
+
+		        if (firstName.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "First name cannot be empty.");
+		            return;
+		        }
+		        if (lastName.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Last name cannot be empty.");
+		            return;
+		        }
+		        if (address.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Address cannot be empty.");
+		            return;
+		        }
+		        if (contact.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Contact number cannot be empty.");
+		            return;
+		        }
+		        if (reason.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Reason for adoption cannot be empty.");
+		            return;
+		        }
+
 		        int age = 0;
 		        try {
 		            if (!ageText.isEmpty()) {
@@ -360,17 +382,45 @@ public class PetAdoptionApplication extends JFrame {
 		            return;
 		        }
 
-		        String sex = rdbtnMale.isSelected() ? "Male" : "Female";
-		        String status = rdbtnSingle.isSelected() ? "Single" : "Married";
-		        String incomeLevel = rdbtnLow.isSelected() ? "Low" :
-		                             rdbtnMiddle.isSelected() ? "Middle" : "High";
-		        int petCount = Integer.parseInt(choicePetCount.getSelectedItem().toString());
-		        String selectedEmployee = choiceEmployee.getSelectedItem().toString();
+		        String sex = rdbtnMale.isSelected() ? "Male" : (rdbtnFemale.isSelected() ? "Female" : null);
+		        if (sex == null) {
+		            JOptionPane.showMessageDialog(null, "Please select a gender.");
+		            return;
+		        }
 
+		        String status = rdbtnSingle.isSelected() ? "Single" : (rdbtnMarried.isSelected() ? "Married" : null);
+		        if (status == null) {
+		            JOptionPane.showMessageDialog(null, "Please select a civil status.");
+		            return;
+		        }
+
+		        String incomeLevel = rdbtnLow.isSelected() ? "Low" :
+		                             rdbtnMiddle.isSelected() ? "Middle" : 
+		                             (rdbtnHigh.isSelected() ? "High" : null);
+		        if (incomeLevel == null) {
+		            JOptionPane.showMessageDialog(null, "Please select an income level.");
+		            return;
+		        }
+
+		        if (choicePetCount.getSelectedItem() == null) {
+		            JOptionPane.showMessageDialog(null, "Please select a pet count.");
+		            return;
+		        }
+		        int petCount = Integer.parseInt(choicePetCount.getSelectedItem().toString());
+
+		        if (choiceEmployee.getSelectedItem() == null) {
+		            JOptionPane.showMessageDialog(null, "Please select an employee.");
+		            return;
+		        }
+		        String selectedEmployee = choiceEmployee.getSelectedItem().toString();
 		        String[] parts = selectedEmployee.split(" - ");
 		        int employeeId = Integer.parseInt(parts[0]);
 
 		        JTable petTable = (JTable) scrollPanePet.getViewport().getView();
+		        if (petTable == null) {
+		            JOptionPane.showMessageDialog(null, "Pet table is not initialized.");
+		            return;
+		        }
 		        int selectedRow = petTable.getSelectedRow();
 		        if (selectedRow == -1) {
 		            JOptionPane.showMessageDialog(null, "Please select a pet.");

@@ -294,34 +294,54 @@ public class Records extends JFrame {
 	        int option = JOptionPane.showConfirmDialog(null, message, "Add Pet", JOptionPane.OK_CANCEL_OPTION);
 	        if (option == JOptionPane.CANCEL_OPTION) return;
 
-	        String petName = petNameField.getText();
-	        String breed = breedField.getText();
-	        String species = speciesField.getText();
-	        String color = colorField.getText();
-	        int age = Integer.parseInt(ageField.getText());
-	        String sex = sexField.getText();
-	        String arrivalDate = arrivalDateField.getText();
-	        String vaccinationStatus = vaccinationStatusField.getText();
-	        String spayedNeutered = spayedNeuteredField.getText();
-	        String trainingLevel = trainingLevelField.getText();
-	        String adoptionStatus = adoptionStatusField.getText();
+	        String petName = petNameField.getText().trim();
+	        String breed = breedField.getText().trim();
+	        String species = speciesField.getText().trim().toLowerCase();
+	        String color = colorField.getText().trim();
+	        String ageText = ageField.getText().trim();
+	        String sex = sexField.getText().trim().toLowerCase();
+	        String arrivalDate = arrivalDateField.getText().trim();
+	        String vaccinationStatus = vaccinationStatusField.getText().trim().toLowerCase();
+	        String spayedNeutered = spayedNeuteredField.getText().trim().toLowerCase();
+	        String trainingLevel = trainingLevelField.getText().trim().toLowerCase();
+	        String adoptionStatus = adoptionStatusField.getText().trim().toLowerCase();
+
+	        if (petName.isEmpty() || breed.isEmpty() || species.isEmpty() || color.isEmpty() || 
+	            ageText.isEmpty() || sex.isEmpty() || arrivalDate.isEmpty() || 
+	            vaccinationStatus.isEmpty() || spayedNeutered.isEmpty() || 
+	            trainingLevel.isEmpty() || adoptionStatus.isEmpty()) {
+	            JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+	            continue;
+	        }
+
+	        int age;
+	        try {
+	            age = Integer.parseInt(ageText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Age must be a valid number.");
+	            continue;
+	        }
 
 	        if (species.equals("dog") || species.equals("cat") || species.equals("bird")) {
 	            if (age <= 20 && age > 0) {
 	                if (sex.equals("male") || sex.equals("female")) {
-	                    if (vaccinationStatus.equals("yes") || vaccinationStatus.equals("no")) {
-	                        if (spayedNeutered.equals("yes") || spayedNeutered.equals("no")) {
-	                            if (adoptionStatus.equals("available") || adoptionStatus.equals("adopted") || adoptionStatus.equals("returned")) {
-	                                addPetToDatabase(petName, breed, species, color, age, sex, arrivalDate, vaccinationStatus, spayedNeutered, trainingLevel, adoptionStatus);
-	                                break; 
-	                            } else {
-	                                JOptionPane.showMessageDialog(null, "Invalid Adoption Status.");
-	                            }
-	                        } else {
-	                            JOptionPane.showMessageDialog(null, "Spayed/Neutered must be 'yes' or 'no'.");
-	                        }
+	                    if (isValidDate(arrivalDate)) {
+		                    if (vaccinationStatus.equals("yes") || vaccinationStatus.equals("no")) {
+		                        if (spayedNeutered.equals("yes") || spayedNeutered.equals("no")) {
+		                            if (adoptionStatus.equals("available") || adoptionStatus.equals("adopted") || adoptionStatus.equals("returned")) {
+		                                addPetToDatabase(petName, breed, species, color, age, sex, arrivalDate, vaccinationStatus, spayedNeutered, trainingLevel, adoptionStatus);
+		                                break; 
+		                            } else {
+		                                JOptionPane.showMessageDialog(null, "Invalid Adoption Status.");
+		                            }
+		                        } else {
+		                            JOptionPane.showMessageDialog(null, "Spayed/Neutered must be 'yes' or 'no'.");
+		                        }
+		                    } else {
+		                        JOptionPane.showMessageDialog(null, "Vaccination Status must be 'yes' or 'no'.");
+		                    }
 	                    } else {
-	                        JOptionPane.showMessageDialog(null, "Vaccination Status must be 'yes' or 'no'.");
+	                    	JOptionPane.showMessageDialog(null, "Adoption Date must be in the format YYYY-MM-DD.");
 	                    }
 	                } else {
 	                    JOptionPane.showMessageDialog(null, "Sex must be 'male' or 'female'.");
@@ -377,11 +397,11 @@ public class Records extends JFrame {
 	    Object[] message = {
 	        "First Name:", firstNameField,
 	        "Last Name:", lastNameField,
-	        "Age (16 to 80):", ageField,
+	        "Age (16-80):", ageField,
 	        "Sex (male/female):", sexField,
-	        "Pet Count (max 5):", petCountField,
+	        "Pet Count (<=5):", petCountField,
 	        "Address:", addressField,
-	        "Income Level (low/medium/high):", incomeLevelField,
+	        "Income Level (low/middle/high):", incomeLevelField,
 	        "Contact Number:", contactNumberField,
 	        "Civil Status (single/married):", civilStatusField,
 	        "Reason for Adoption:", reasonField
@@ -391,21 +411,44 @@ public class Records extends JFrame {
 	        int option = JOptionPane.showConfirmDialog(null, message, "Add Adopter", JOptionPane.OK_CANCEL_OPTION);
 	        if (option == JOptionPane.CANCEL_OPTION) return;
 
-	        String firstName = firstNameField.getText();
-	        String lastName = lastNameField.getText();
-	        int age = Integer.parseInt(ageField.getText());
-	        String sex = sexField.getText();
-	        int petCount = Integer.parseInt(petCountField.getText());
-	        String address = addressField.getText();
-	        String incomeLevel = incomeLevelField.getText();
-	        String contactNumber = contactNumberField.getText();
-	        String civilStatus = civilStatusField.getText();
-	        String reason = reasonField.getText();
+	        String firstName = firstNameField.getText().trim();
+	        String lastName = lastNameField.getText().trim();
+	        String ageText = ageField.getText().trim();
+	        String sex = sexField.getText().trim().toLowerCase();
+	        String petCountText = petCountField.getText().trim();
+	        String address = addressField.getText().trim();
+	        String incomeLevel = incomeLevelField.getText().trim().toLowerCase();
+	        String contactNumber = contactNumberField.getText().trim();
+	        String civilStatus = civilStatusField.getText().trim().toLowerCase();
+	        String reason = reasonField.getText().trim();
+
+	        if (firstName.isEmpty() || lastName.isEmpty() || ageText.isEmpty() || sex.isEmpty() || 
+	            petCountText.isEmpty() || address.isEmpty() || incomeLevel.isEmpty() || 
+	            contactNumber.isEmpty() || civilStatus.isEmpty() || reason.isEmpty()) {
+	            JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+	            continue;
+	        }
+
+	        int age;
+	        int petCount;
+	        try {
+	            age = Integer.parseInt(ageText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Age must be a valid number.");
+	            continue;
+	        }
+	        
+	        try {
+	            petCount = Integer.parseInt(petCountText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Pet Count must be a valid number.");
+	            continue;
+	        }
 
 	        if (age >= 16 && age <= 80) {
 	            if (sex.equals("male") || sex.equals("female")) {
 	                if (petCount >= 0 && petCount <= 5) {
-	                    if (incomeLevel.equals("low") || incomeLevel.equals("medium") || incomeLevel.equals("high")) {
+	                    if (incomeLevel.equals("low") || incomeLevel.equals("middle") || incomeLevel.equals("high")) {
 	                        if (civilStatus.equals("single") || civilStatus.equals("married")) {
 	                            addAdopterToDatabase(firstName, lastName, age, sex, petCount, address, incomeLevel, contactNumber, civilStatus, reason);
 	                            break;
@@ -413,7 +456,7 @@ public class Records extends JFrame {
 	                            JOptionPane.showMessageDialog(null, "Civil Status must be 'single' or 'married'.");
 	                        }
 	                    } else {
-	                        JOptionPane.showMessageDialog(null, "Income Level must be 'low', 'medium', or 'high'.");
+	                        JOptionPane.showMessageDialog(null, "Income Level must be 'low', 'middle', or 'high'.");
 	                    }
 	                } else {
 	                    JOptionPane.showMessageDialog(null, "Pet Count must be between 0 and 5.");
@@ -473,11 +516,50 @@ public class Records extends JFrame {
 	        int option = JOptionPane.showConfirmDialog(null, message, "Add Adoption", JOptionPane.OK_CANCEL_OPTION);
 	        if (option == JOptionPane.CANCEL_OPTION) return;
 
-	        int petId = Integer.parseInt(petIdField.getText());
-	        int adopterId = Integer.parseInt(adopterIdField.getText());
-	        int employeeId = Integer.parseInt(employeeIdField.getText());
-	        String adoptionDate = adoptionDateField.getText();
-	        double adoptionFee = Double.parseDouble(adoptionFeeField.getText());
+	        String petIdText = petIdField.getText().trim();
+	        String adopterIdText = adopterIdField.getText().trim();
+	        String employeeIdText = employeeIdField.getText().trim();
+	        String adoptionDate = adoptionDateField.getText().trim();
+	        String adoptionFeeText = adoptionFeeField.getText().trim();
+
+	        if (petIdText.isEmpty() || adopterIdText.isEmpty() || employeeIdText.isEmpty() || 
+	            adoptionDate.isEmpty() || adoptionFeeText.isEmpty()) {
+	            JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+	            continue;
+	        }
+
+	        int petId;
+	        int adopterId;
+	        int employeeId;
+	        double adoptionFee;
+
+	        try {
+	            petId = Integer.parseInt(petIdText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Pet ID must be a valid number.");
+	            continue;
+	        }
+
+	        try {
+	            adopterId = Integer.parseInt(adopterIdText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Adopter ID must be a valid number.");
+	            continue;
+	        }
+
+	        try {
+	            employeeId = Integer.parseInt(employeeIdText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Employee ID must be a valid number.");
+	            continue;
+	        }
+
+	        try {
+	            adoptionFee = Double.parseDouble(adoptionFeeText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Adoption Fee must be a valid number.");
+	            continue;
+	        }
 
 	        if (isPetIdValid(petId)) {
 	            if (isAdopterIdValid(adopterId)) {
@@ -613,7 +695,7 @@ public class Records extends JFrame {
 	        "Sex (male/female):", sexField,
 	        "Employee Role:", employeeRoleField,
 	        "Years of Experience:", yearsOfExperienceField,
-	        "Salary (10000 to 100000):", salaryField,
+	        "Salary (10000-100000):", salaryField,
 	        "Number of Hours Worked:", hoursWorkedField,
 	        "Date Worked (YYYY-MM-DD):", dateWorkedField,
 	        "Notes:", notesField
@@ -623,32 +705,76 @@ public class Records extends JFrame {
 	        int option = JOptionPane.showConfirmDialog(null, message, "Add Employee", JOptionPane.OK_CANCEL_OPTION);
 	        if (option == JOptionPane.CANCEL_OPTION) return;
 
-	        String firstName = firstNameField.getText();
-	        String lastName = lastNameField.getText();
-	        int age = Integer.parseInt(ageField.getText());
-	        String sex = sexField.getText();
-	        String employeeRole = employeeRoleField.getText();
-	        int yearsOfExperience = Integer.parseInt(yearsOfExperienceField.getText());
-	        double salary = Double.parseDouble(salaryField.getText());
-	        int hoursWorked = Integer.parseInt(hoursWorkedField.getText());
-	        String dateWorked = dateWorkedField.getText();
-	        String notes = notesField.getText();
+	        String firstName = firstNameField.getText().trim();
+	        String lastName = lastNameField.getText().trim();
+	        String ageText = ageField.getText().trim();
+	        String sex = sexField.getText().trim().toLowerCase();
+	        String employeeRole = employeeRoleField.getText().trim();
+	        String yearsOfExperienceText = yearsOfExperienceField.getText().trim();
+	        String salaryText = salaryField.getText().trim();
+	        String hoursWorkedText = hoursWorkedField.getText().trim();
+	        String dateWorked = dateWorkedField.getText().trim();
+	        String notes = notesField.getText().trim();
+
+	        if (firstName.isEmpty() || lastName.isEmpty() || ageText.isEmpty() || sex.isEmpty() || 
+	            employeeRole.isEmpty() || yearsOfExperienceText.isEmpty() || salaryText.isEmpty() || 
+	            hoursWorkedText.isEmpty() || dateWorked.isEmpty()) {
+	            JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+	            continue;
+	        }
+
+	        int age;
+	        int yearsOfExperience;
+	        double salary;
+	        int hoursWorked;
+
+	        try {
+	            age = Integer.parseInt(ageText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Age must be a valid number.");
+	            continue;
+	        }
+
+	        try {
+	            yearsOfExperience = Integer.parseInt(yearsOfExperienceText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Years of Experience must be a valid number.");
+	            continue;
+	        }
+
+	        try {
+	            salary = Double.parseDouble(salaryText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Salary must be a valid number.");
+	            continue;
+	        }
+
+	        try {
+	            hoursWorked = Integer.parseInt(hoursWorkedText);
+	        } catch (NumberFormatException e) {
+	            JOptionPane.showMessageDialog(null, "Number of Hours Worked must be a valid number.");
+	            continue;
+	        }
 
 	        if (age >= 16 && age <= 80) {
-	            if (sex.equals("male") || sex.equals("female")) {
-	                if (salary >= 10000 && salary <= 100000) {
-	                    if (hoursWorked > 0) {
-	                        if (isValidDate(dateWorked)) {
-	                            addEmployeeToDatabase(firstName, lastName, age, sex, employeeRole, yearsOfExperience, salary, hoursWorked, dateWorked, notes);
-	                            break; 
+	            if (sex.equalsIgnoreCase("male") || sex.equalsIgnoreCase("female")) {
+	                if (yearsOfExperience > 0) {
+	                    if (salary >= 10000 && salary <= 100000) {
+	                        if (hoursWorked > 0) {
+	                            if (isValidDate(dateWorked)) {
+	                                addEmployeeToDatabase(firstName, lastName, age, sex, employeeRole, yearsOfExperience, salary, hoursWorked, dateWorked, notes);
+	                                break;
+	                            } else {
+	                                JOptionPane.showMessageDialog(null, "Date Worked must be in the format YYYY-MM-DD.");
+	                            }
 	                        } else {
-	                            JOptionPane.showMessageDialog(null, "Date Worked must be in the format YYYY-MM-DD.");
+	                            JOptionPane.showMessageDialog(null, "Number of Hours Worked must be greater than 0.");
 	                        }
 	                    } else {
-	                        JOptionPane.showMessageDialog(null, "Number of Hours Worked must be greater than 0.");
+	                        JOptionPane.showMessageDialog(null, "Salary must be between 10,000 and 100,000.");
 	                    }
 	                } else {
-	                    JOptionPane.showMessageDialog(null, "Salary must be between 10,000 and 100,000.");
+	                    JOptionPane.showMessageDialog(null, "Years of Experience must be greater than 0.");
 	                }
 	            } else {
 	                JOptionPane.showMessageDialog(null, "Sex must be 'male' or 'female'.");
@@ -686,53 +812,64 @@ public class Records extends JFrame {
 	        JOptionPane.showMessageDialog(null, "Error adding employee: " + ex.getMessage());
 	    }
 	}
-
 	
 	public void deletePetFromDatabase(int petId) {
-	    String query = "DELETE FROM pet WHERE pet_id = ?";
-	    try (PreparedStatement stmt = dbConnector.getConnection().prepareStatement(query)) {
-	        stmt.setInt(1, petId);
-	        stmt.executeUpdate();
-	        JOptionPane.showMessageDialog(null, "Pet deleted successfully!");
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Error deleting pet: " + e.getMessage());
+	    int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this pet?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+	    if (option == JOptionPane.YES_OPTION) {
+	        String query = "DELETE FROM pet WHERE pet_id = ?";
+	        try (PreparedStatement stmt = dbConnector.getConnection().prepareStatement(query)) {
+	            stmt.setInt(1, petId);
+	            stmt.executeUpdate();
+	            JOptionPane.showMessageDialog(null, "Pet deleted successfully!");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            JOptionPane.showMessageDialog(null, "Error deleting pet: " + e.getMessage());
+	        }
 	    }
 	}
-	
+
 	public void deleteAdopterFromDatabase(int adopterId) {
-	    String query = "DELETE FROM adopter WHERE adopter_id = ?";
-	    try (PreparedStatement stmt = dbConnector.getConnection().prepareStatement(query)) {
-	        stmt.setInt(1, adopterId);
-	        stmt.executeUpdate();
-	        JOptionPane.showMessageDialog(null, "Adopter deleted successfully!");
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Error deleting adopter: " + e.getMessage());
+	    int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this adopter?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+	    if (option == JOptionPane.YES_OPTION) {
+	        String query = "DELETE FROM adopter WHERE adopter_id = ?";
+	        try (PreparedStatement stmt = dbConnector.getConnection().prepareStatement(query)) {
+	            stmt.setInt(1, adopterId);
+	            stmt.executeUpdate();
+	            JOptionPane.showMessageDialog(null, "Adopter deleted successfully!");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            JOptionPane.showMessageDialog(null, "Error deleting adopter: " + e.getMessage());
+	        }
 	    }
 	}
 
 	public void deleteAdoptionFromDatabase(int adoptionId) {
-	    String query = "DELETE FROM adoption WHERE adoption_id = ?";
-	    try (PreparedStatement stmt = dbConnector.getConnection().prepareStatement(query)) {
-	        stmt.setInt(1, adoptionId);
-	        stmt.executeUpdate();
-	        JOptionPane.showMessageDialog(null, "Adoption deleted successfully!");
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Error deleting adoption: " + e.getMessage());
+	    int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this adoption?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+	    if (option == JOptionPane.YES_OPTION) {
+	        String query = "DELETE FROM adoption WHERE adoption_id = ?";
+	        try (PreparedStatement stmt = dbConnector.getConnection().prepareStatement(query)) {
+	            stmt.setInt(1, adoptionId);
+	            stmt.executeUpdate();
+	            JOptionPane.showMessageDialog(null, "Adoption deleted successfully!");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            JOptionPane.showMessageDialog(null, "Error deleting adoption: " + e.getMessage());
+	        }
 	    }
 	}
 
 	public void deleteEmployeeFromDatabase(int employeeId) {
-	    String query = "DELETE FROM employee WHERE employee_id = ?";
-	    try (PreparedStatement stmt = dbConnector.getConnection().prepareStatement(query)) {
-	        stmt.setInt(1, employeeId);
-	        stmt.executeUpdate();
-	        JOptionPane.showMessageDialog(null, "Employee deleted successfully!");
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Error deleting employee: " + e.getMessage());
+	    int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this employee?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+	    if (option == JOptionPane.YES_OPTION) {
+	        String query = "DELETE FROM employee WHERE employee_id = ?";
+	        try (PreparedStatement stmt = dbConnector.getConnection().prepareStatement(query)) {
+	            stmt.setInt(1, employeeId);
+	            stmt.executeUpdate();
+	            JOptionPane.showMessageDialog(null, "Employee deleted successfully!");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            JOptionPane.showMessageDialog(null, "Error deleting employee: " + e.getMessage());
+	        }
 	    }
 	}
 	
@@ -771,15 +908,32 @@ public class Records extends JFrame {
 	                    return; 
 	                }
 
-	                String newSpecies = petSpeciesField.getText().toLowerCase();
-	                int newAge = Integer.parseInt(petAgeField.getText());
-	                String newVaccinationStatus = petVaccinationStatusField.getText().toLowerCase();
-	                String newSpayedNeutered = petSpayedNeuteredField.getText().toLowerCase();
-	                String newTrainingLevel = petTrainingLevelField.getText().toLowerCase();
-	                String newAdoptionStatus = petAdoptionStatusField.getText().toLowerCase();
+	                String newSpecies = petSpeciesField.getText().trim().toLowerCase();
+	                String newAgeText = petAgeField.getText().trim();
+	                String newVaccinationStatus = petVaccinationStatusField.getText().trim().toLowerCase();
+	                String newSpayedNeutered = petSpayedNeuteredField.getText().trim().toLowerCase();
+	                String newTrainingLevel = petTrainingLevelField.getText().trim().toLowerCase();
+	                String newAdoptionStatus = petAdoptionStatusField.getText().trim().toLowerCase();
 
+	                if (petNameField.getText().trim().isEmpty() || petBreedField.getText().trim().isEmpty() ||
+	                    petSpeciesField.getText().trim().isEmpty() || petColorField.getText().trim().isEmpty() ||
+	                    newAgeText.isEmpty() || petVaccinationStatusField.getText().trim().isEmpty() ||
+	                    petSpayedNeuteredField.getText().trim().isEmpty() || petTrainingLevelField.getText().trim().isEmpty() ||
+	                    petAdoptionStatusField.getText().trim().isEmpty()) {
+	                    JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+	                    continue;
+	                }
+
+	                int newAge = -1;
 	                boolean valid = true;
 	                String errorMessage = "Please fix the following errors:\n";
+
+	                try {
+	                    newAge = Integer.parseInt(newAgeText);
+	                } catch (NumberFormatException e) {
+	                    errorMessage += "- Age must be a valid number.\n";
+	                    valid = false;
+	                }
 
 	                if (!newSpecies.equals("dog") && !newSpecies.equals("cat") && !newSpecies.equals("bird")) {
 	                    errorMessage += "- Species must be dog, cat, or bird.\n";
@@ -866,7 +1020,7 @@ public class Records extends JFrame {
 	                "Sex (male, female):", sexField,
 	                "Pet Count (max 5):", petCountField,
 	                "Address:", addressField,
-	                "Income Level (low, medium, high):", incomeLevelField,
+	                "Income Level (low, middle, high):", incomeLevelField,
 	                "Contact Number:", contactNumberField,
 	                "Civil Status (single, married):", civilStatusField,
 	                "Reason for Adoption:", reasonField
@@ -878,67 +1032,76 @@ public class Records extends JFrame {
 	                    return; 
 	                }
 
-	                String newAdopterType = adopterTypeField.getText().toLowerCase();
-	                int newAge = Integer.parseInt(ageField.getText());
-	                String newSex = sexField.getText().toLowerCase();
-	                int newPetCount = Integer.parseInt(petCountField.getText());
-	                String newIncomeLevel = incomeLevelField.getText().toLowerCase();
-	                String newCivilStatus = civilStatusField.getText().toLowerCase();
+	                String newAdopterType = adopterTypeField.getText().trim();
+	                String newFirstName = firstNameField.getText().trim();
+	                String newLastName = lastNameField.getText().trim();
+	                String newAgeText = ageField.getText().trim();
+	                String newSex = sexField.getText().trim();
+	                String newPetCountText = petCountField.getText().trim();
+	                String newAddress = addressField.getText().trim();
+	                String newIncomeLevel = incomeLevelField.getText().trim();
+	                String newContactNumber = contactNumberField.getText().trim();
+	                String newCivilStatus = civilStatusField.getText().trim();
+	                String newReason = reasonField.getText().trim();
 
-	                boolean valid = true;
-	                String errorMessage = "Please fix the following errors:\n";
+	                if (newAdopterType.isEmpty() || newFirstName.isEmpty() || newLastName.isEmpty() || 
+	                    newAgeText.isEmpty() || newSex.isEmpty() || newPetCountText.isEmpty() || 
+	                    newAddress.isEmpty() || newIncomeLevel.isEmpty() || newContactNumber.isEmpty() || 
+	                    newCivilStatus.isEmpty() || newReason.isEmpty()) {
+	                    JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+	                    continue;
+	                }
+
+	                int newAge = Integer.parseInt(newAgeText);
+	                int newPetCount = Integer.parseInt(newPetCountText);
 
 	                if (!newAdopterType.equals("adopter") && !newAdopterType.equals("rescuer") && !newAdopterType.equals("returnee")) {
-	                    errorMessage += "- Adopter type must be 'adopter', 'rescuer', or 'returnee'.\n";
-	                    valid = false;
+	                    JOptionPane.showMessageDialog(null, "Adopter type must be 'adopter', 'rescuer', or 'returnee'.");
+	                    continue;
 	                }
-	                if (newAge < 18) { 
-	                    errorMessage += "- Age must be 18 or older.\n";
-	                    valid = false;
+	                if (newAge < 18) {
+	                    JOptionPane.showMessageDialog(null, "Age must be 18 or older.");
+	                    continue;
 	                }
 	                if (!newSex.equals("male") && !newSex.equals("female")) {
-	                    errorMessage += "- Sex must be 'male' or 'female'.\n";
-	                    valid = false;
+	                    JOptionPane.showMessageDialog(null, "Sex must be 'male' or 'female'.");
+	                    continue;
 	                }
 	                if (newPetCount < 0 || newPetCount > 5) {
-	                    errorMessage += "- Pet count must be between 0 and 5.\n";
-	                    valid = false;
+	                    JOptionPane.showMessageDialog(null, "Pet count must be between 0 and 5.");
+	                    continue;
 	                }
-	                if (!newIncomeLevel.equals("low") && !newIncomeLevel.equals("medium") && !newIncomeLevel.equals("high")) {
-	                    errorMessage += "- Income level must be 'low', 'medium', or 'high'.\n";
-	                    valid = false;
+	                if (!newIncomeLevel.equals("low") && !newIncomeLevel.equals("middle") && !newIncomeLevel.equals("high")) {
+	                    JOptionPane.showMessageDialog(null, "Income level must be 'low', 'middle', or 'high'.");
+	                    continue;
 	                }
 	                if (!newCivilStatus.equals("single") && !newCivilStatus.equals("married")) {
-	                    errorMessage += "- Civil status must be 'single' or 'married'.\n";
-	                    valid = false;
+	                    JOptionPane.showMessageDialog(null, "Civil status must be 'single' or 'married'.");
+	                    continue;
 	                }
 
-	                if (valid) {
-	                    String updateQuery = "UPDATE adopter SET adopter_type = ?, first_name = ?, last_name = ?, age = ?, sex = ?, pet_count = ?, " +
-	                            "address = ?, income_level = ?, contact_number = ?, civil_status = ?, reason = ? WHERE adopter_id = ?";
-	                    try (PreparedStatement updateStmt = dbConnector.getConnection().prepareStatement(updateQuery)) {
-	                        updateStmt.setString(1, newAdopterType);
-	                        updateStmt.setString(2, firstNameField.getText());
-	                        updateStmt.setString(3, lastNameField.getText());
-	                        updateStmt.setInt(4, newAge);
-	                        updateStmt.setString(5, newSex);
-	                        updateStmt.setInt(6, newPetCount);
-	                        updateStmt.setString(7, addressField.getText());
-	                        updateStmt.setString(8, newIncomeLevel);
-	                        updateStmt.setString(9, contactNumberField.getText());
-	                        updateStmt.setString(10, newCivilStatus);
-	                        updateStmt.setString(11, reasonField.getText());
-	                        updateStmt.setInt(12, adopterId);  
-	                        updateStmt.executeUpdate();
-	                        JOptionPane.showMessageDialog(null, "Adopter details updated successfully!");
-	                        loadAdopterData();
-	                        break;
-	                    } catch (SQLException ex) {
-	                        ex.printStackTrace();
-	                        JOptionPane.showMessageDialog(null, "Error updating adopter: " + ex.getMessage());
-	                    }
-	                } else {
-	                    JOptionPane.showMessageDialog(null, errorMessage, "Invalid Input", JOptionPane.ERROR_MESSAGE);
+	                String updateQuery = "UPDATE adopter SET adopter_type = ?, first_name = ?, last_name = ?, age = ?, sex = ?, pet_count = ?, " +
+	                        "address = ?, income_level = ?, contact_number = ?, civil_status = ?, reason = ? WHERE adopter_id = ?";
+	                try (PreparedStatement updateStmt = dbConnector.getConnection().prepareStatement(updateQuery)) {
+	                    updateStmt.setString(1, newAdopterType);
+	                    updateStmt.setString(2, newFirstName);
+	                    updateStmt.setString(3, newLastName);
+	                    updateStmt.setInt(4, newAge);
+	                    updateStmt.setString(5, newSex);
+	                    updateStmt.setInt(6, newPetCount);
+	                    updateStmt.setString(7, newAddress);
+	                    updateStmt.setString(8, newIncomeLevel);
+	                    updateStmt.setString(9, newContactNumber);
+	                    updateStmt.setString(10, newCivilStatus);
+	                    updateStmt.setString(11, newReason);
+	                    updateStmt.setInt(12, adopterId);  
+	                    updateStmt.executeUpdate();
+	                    JOptionPane.showMessageDialog(null, "Adopter details updated successfully!");
+	                    loadAdopterData();
+	                    break;
+	                } catch (SQLException ex) {
+	                    ex.printStackTrace();
+	                    JOptionPane.showMessageDialog(null, "Error updating adopter: " + ex.getMessage());
 	                }
 	            }
 	        }
@@ -947,7 +1110,6 @@ public class Records extends JFrame {
 	        JOptionPane.showMessageDialog(null, "Error fetching adopter data: " + ex.getMessage());
 	    }
 	}
-
 
 	private void modifyAdoptionData(int adoptionId) {
 	    String query = "SELECT * FROM adoption WHERE adoption_id = ?";
@@ -982,11 +1144,22 @@ public class Records extends JFrame {
 	                    return; 
 	                }
 
-	                int newPetId = Integer.parseInt(petIdField.getText());
-	                int newAdopterId = Integer.parseInt(adopterIdField.getText());
-	                int newEmployeeId = Integer.parseInt(employeeIdField.getText());
-	                String newAdoptionDate = adoptionDateField.getText();
-	                double newAdoptionFee = Double.parseDouble(adoptionFeeField.getText());
+	                String newPetIdText = petIdField.getText().trim();
+	                String newAdopterIdText = adopterIdField.getText().trim();
+	                String newEmployeeIdText = employeeIdField.getText().trim();
+	                String newAdoptionDate = adoptionDateField.getText().trim();
+	                String newAdoptionFeeText = adoptionFeeField.getText().trim();
+
+	                if (newPetIdText.isEmpty() || newAdopterIdText.isEmpty() || newEmployeeIdText.isEmpty() ||
+	                    newAdoptionDate.isEmpty() || newAdoptionFeeText.isEmpty()) {
+	                    JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+	                    continue;
+	                }
+
+	                int newPetId = Integer.parseInt(newPetIdText);
+	                int newAdopterId = Integer.parseInt(newAdopterIdText);
+	                int newEmployeeId = Integer.parseInt(newEmployeeIdText);
+	                double newAdoptionFee = Double.parseDouble(newAdoptionFeeText);
 
 	                boolean valid = true;
 	                String errorMessage = "Please fix the following errors:\n";
@@ -1105,9 +1278,9 @@ public class Records extends JFrame {
 	                "Sex (male, female):", sexField,
 	                "Age (between 16 and 80):", ageField,
 	                "Employee Role:", employeeRoleField,
-	                "Years of Experience:", yearsOfExperienceField,
+	                "Years of Experience (>0):", yearsOfExperienceField,
 	                "Salary (greater than 10,000 and less than 100,000):", salaryField,
-	                "Number of Hours Worked (less than 168):", numberOfHoursWorkedField,
+	                "Number of Hours Worked (>0):", numberOfHoursWorkedField,
 	                "Date Worked (yyyy-mm-dd):", dateWorkedField,
 	                "Notes:", notesField
 	            };
@@ -1119,10 +1292,24 @@ public class Records extends JFrame {
 	                }
 
 	                String newSex = sexField.getText().toLowerCase();
-	                int newAge = Integer.parseInt(ageField.getText());
-	                double newSalary = Double.parseDouble(salaryField.getText());
-	                int newNumberOfHoursWorked = Integer.parseInt(numberOfHoursWorkedField.getText());
-	                String newDateWorked = dateWorkedField.getText();
+	                String newFirstName = firstNameField.getText().trim();
+	                String newLastName = lastNameField.getText().trim();
+	                String newAgeText = ageField.getText().trim();
+	                String newSalaryText = salaryField.getText().trim();
+	                String newNumberOfHoursWorkedText = numberOfHoursWorkedField.getText().trim();
+	                String newDateWorked = dateWorkedField.getText().trim();
+	                String newYearsOfExperienceText = yearsOfExperienceField.getText().trim();
+
+	                if (newFirstName.isEmpty() || newLastName.isEmpty() || newSex.isEmpty() || newAgeText.isEmpty() || 
+	                    newSalaryText.isEmpty() || newNumberOfHoursWorkedText.isEmpty() || newDateWorked.isEmpty()) {
+	                    JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+	                    continue;
+	                }
+
+	                int newAge = Integer.parseInt(newAgeText);
+	                double newSalary = Double.parseDouble(newSalaryText);
+	                int newNumberOfHoursWorked = Integer.parseInt(newNumberOfHoursWorkedText);
+	                int newYearsOfExperience = Integer.parseInt(newYearsOfExperienceText);
 
 	                boolean valid = true;
 	                String errorMessage = "Please fix the following errors:\n";
@@ -1139,11 +1326,14 @@ public class Records extends JFrame {
 	                    errorMessage += "- Salary must be between 10,000 and 100,000.\n";
 	                    valid = false;
 	                }
-	                if (newNumberOfHoursWorked < 0 || newNumberOfHoursWorked > 168) {
-	                    errorMessage += "- Number of hours worked must be less than 168.\n";
+	                if (newNumberOfHoursWorked < 0) {
+	                    errorMessage += "- Number of hours worked must greater than 0.\n";
 	                    valid = false;
 	                }
-
+	                if (newYearsOfExperience <= 0) {
+	                    errorMessage += "- Years of Experience must be greater than 0.\n";
+	                    valid = false;
+	                }
 	                if (!newDateWorked.matches("\\d{4}-\\d{2}-\\d{2}")) {
 	                    errorMessage += "- Date worked must be in the format yyyy-mm-dd.\n";
 	                    valid = false;
@@ -1153,21 +1343,21 @@ public class Records extends JFrame {
 	                    String updateQuery = "UPDATE employee SET first_name = ?, last_name = ?, sex = ?, age = ?, employee_role = ?, " +
 	                            "years_of_experience = ?, salary = ?, number_of_hours_worked = ?, date_worked = ?, notes = ? WHERE employee_id = ?";
 	                    try (PreparedStatement updateStmt = dbConnector.getConnection().prepareStatement(updateQuery)) {
-	                        updateStmt.setString(1, firstNameField.getText());
-	                        updateStmt.setString(2, lastNameField.getText());
+	                        updateStmt.setString(1, newFirstName);
+	                        updateStmt.setString(2, newLastName);
 	                        updateStmt.setString(3, newSex);
 	                        updateStmt.setInt(4, newAge);
 	                        updateStmt.setString(5, employeeRoleField.getText());
-	                        updateStmt.setInt(6, Integer.parseInt(yearsOfExperienceField.getText()));
+	                        updateStmt.setInt(6, newYearsOfExperience);
 	                        updateStmt.setDouble(7, newSalary);
 	                        updateStmt.setInt(8, newNumberOfHoursWorked);
 	                        updateStmt.setString(9, newDateWorked);
 	                        updateStmt.setString(10, notesField.getText());
-	                        updateStmt.setInt(11, employeeId);  
+	                        updateStmt.setInt(11, employeeId);
 	                        updateStmt.executeUpdate();
 	                        JOptionPane.showMessageDialog(null, "Employee details updated successfully!");
-	                        loadEmployeeData(); 
-	                        break; 
+	                        loadEmployeeData();
+	                        break;
 	                    } catch (SQLException ex) {
 	                        ex.printStackTrace();
 	                        JOptionPane.showMessageDialog(null, "Error updating employee: " + ex.getMessage());
@@ -1185,7 +1375,7 @@ public class Records extends JFrame {
 
 	public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
 	    DefaultTableModel model = new DefaultTableModel() {
-	        @Override
+			@Override
 	        public boolean isCellEditable(int row, int column) {
 	            return true;  
 	        }

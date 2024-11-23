@@ -1,19 +1,12 @@
 package app;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import com.mysql.cj.xdevapi.Statement;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import javax.swing.SwingConstants;
-import javax.swing.JTextPane;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -49,9 +42,6 @@ public class PetAdmissionApplication extends JFrame {
 	private final ButtonGroup btnGrpIncLe = new ButtonGroup();
 	private DatabaseConnector dbConnector = new DatabaseConnector();
 
-	/**
-	 * Create the frame.
-	 */
 	public PetAdmissionApplication() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 590, 820);
@@ -415,11 +405,10 @@ public class PetAdmissionApplication extends JFrame {
 		contentPane.add(btnApply);
 		btnApply.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        // Retrieve pet values
 		        String petName = textFieldName.getText();
 		        String breed = textFieldBreed.getText();
-		        String species = textFieldSpecies.getText();
-		        int age = Integer.parseInt(textFieldAge.getText());
+		        String species = textFieldSpecies.getText().toLowerCase(); // Convert to lowercase for comparison
+		        String ageText = textFieldAge.getText();
 		        String sex = rdbtnMale.isSelected() ? "male" : "female";
 		        String color = textFieldColor.getText();
 		        String spayedNeutered = rdbtnYes.isSelected() ? "yes" : "no";
@@ -429,44 +418,76 @@ public class PetAdmissionApplication extends JFrame {
 		                               rdbtnIntermediate.isSelected() ? "intermediate" : "advanced";
 		        String arrivalDate = textFieldYear.getText() + "-" + textFieldMonth.getText() + "-" + textFieldDay.getText();
 
-		        // Retrieve adopter values
 		        String firstName = textFieldFirstName.getText();
 		        String lastName = textFieldLastName.getText();
 		        String address = textAreaAddress.getText();
-		        int adopterAge = Integer.parseInt(textFieldAge1.getText());
+		        String adopterAgeText = textFieldAge1.getText();
 		        String adopterSex = rdbtnMale_1.isSelected() ? "male" : "female";
 		        String status = rdbtnSingle.isSelected() ? "single" : "married";
 		        String contact = textFieldContact.getText();
 		        String reason = textAreaReason.getText();
 		        String incomeLevel = rdbtnLow.isSelected() ? "low" : 
 		                             rdbtnMiddle.isSelected() ? "middle" : "high";
-		        int petCount = Integer.parseInt(choicePetCount.getSelectedItem().toString());
+		        String petCountText = choicePetCount.getSelectedItem().toString();
 		        String selectedItem = choiceEmployee.getSelectedItem().toString();
+		        String[] parts = selectedItem.split(" - ");
+		        int employeeId = Integer.parseInt(parts[0]);
+		        
+		        if (!isValidDate(textFieldYear.getText(), textFieldMonth.getText(), textFieldDay.getText())) {
+		            JOptionPane.showMessageDialog(null, "Arrival date is not valid.");
+		            return;
+		        }
 
-			     // Split the string by the delimiter " - "
-			     String[] parts = selectedItem.split(" - ");
-	
-			     // The first part is the employee ID (as a string), so we parse it into an integer
-			     int employeeId = Integer.parseInt(parts[0]);
+		        if (petName.isEmpty() || breed.isEmpty() || species.isEmpty() || ageText.isEmpty() || sex.isEmpty() 
+		            || color.isEmpty() || spayedNeutered.isEmpty() || vaccinated.isEmpty() || trainingLevel.isEmpty() 
+		            || arrivalDate.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || address.isEmpty() 
+		            || adopterAgeText.isEmpty() || adopterSex.isEmpty() || status.isEmpty() || contact.isEmpty()
+		            || reason.isEmpty() || incomeLevel.isEmpty() || petCountText.isEmpty() || selectedItem.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Please fill in all fields.");
+		            return;
+		        }
 
-		        // SQL for inserting new pet
+		        if (!species.equals("dog") && !species.equals("cat") && !species.equals("bird")) {
+		            JOptionPane.showMessageDialog(null, "Species must be 'dog', 'cat', or 'bird'.");
+		            return;
+		        }
+
+		        int age;
+		        int adopterAge;
+		        int petCount;
+		        try {
+		            age = Integer.parseInt(ageText);
+		            adopterAge = Integer.parseInt(adopterAgeText);
+		            petCount = Integer.parseInt(petCountText);
+		        } catch (NumberFormatException ex) {
+		            JOptionPane.showMessageDialog(null, "Age must be a valid number.");
+		            return; 
+		        }
+		        
+		        if (age <= 0 || age > 20) {
+		            JOptionPane.showMessageDialog(null, "Pet age must be greater than 0 and less than or equal to 20.");
+		            return;
+		        }
+		        
+		        if (adopterAge < 8 || adopterAge > 80) {
+		            JOptionPane.showMessageDialog(null, "Adopter age must be between 8 and 80.");
+		            return;
+		        }
+
 		        String petQuery = "INSERT INTO pet (pet_name, breed, species, color, age, sex, arrival_date, vaccination_status, spayed_neutered, training_level, adoption_status) " +
 		                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'available')";
 		        
-		        // SQL for inserting new adopter
 		        String adopterQuery = "INSERT INTO adopter (adopter_type, first_name, last_name, age, sex, pet_count, address, income_level, contact_number, civil_status, reason) " +
 		                              "VALUES ('rescuer', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		        
-		        // SQL for inserting new adoption
 		        String adoptionQuery = "INSERT INTO adoption (pet_id, adopter_id, employee_id, adoption_date, adoption_fee) " +
-		                               "VALUES (?, ?, ?, CURDATE(), 1500)";  // Adoption fee of 1500
+		                               "VALUES (?, ?, ?, CURDATE(), 1500)"; 
 
 		        try (Connection conn = dbConnector.getConnection(); 
 		             PreparedStatement petStmt = conn.prepareStatement(petQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 		             PreparedStatement adopterStmt = conn.prepareStatement(adopterQuery, PreparedStatement.RETURN_GENERATED_KEYS);
-		             PreparedStatement adoptionStmt = conn.prepareStatement(adoptionQuery)) {
+		             PreparedStatement adoptionStmt = conn.prepareStatement (adoptionQuery)) {
 		            
-		            // Insert pet record
 		            petStmt.setString(1, petName);
 		            petStmt.setString(2, breed);
 		            petStmt.setString(3, species);
@@ -479,12 +500,10 @@ public class PetAdmissionApplication extends JFrame {
 		            petStmt.setString(10, trainingLevel);
 		            petStmt.executeUpdate();
 		            
-		            // Manually get generated pet ID
 		            ResultSet petRs = petStmt.getGeneratedKeys();
 		            petRs.next();
 		            int petId = petRs.getInt(1);
 
-		            // Insert adopter record
 		            adopterStmt.setString(1, firstName);
 		            adopterStmt.setString(2, lastName);
 		            adopterStmt.setInt(3, adopterAge);
@@ -497,18 +516,15 @@ public class PetAdmissionApplication extends JFrame {
 		            adopterStmt.setString(10, reason);
 		            adopterStmt.executeUpdate();
 
-		            // Manually get generated adopter ID
 		            ResultSet adopterRs = adopterStmt.getGeneratedKeys();
 		            adopterRs.next();
 		            int adopterId = adopterRs.getInt(1);
 
-		            // Insert adoption record
 		            adoptionStmt.setInt(1, petId);
 		            adoptionStmt.setInt(2, adopterId);
 		            adoptionStmt.setInt(3, employeeId);
 		            adoptionStmt.executeUpdate();
 
-		            // Show message
 		            JOptionPane.showMessageDialog(null, "Pet and adopter added successfully with admission fee of 1500!");
 
 		        } catch (SQLException ex) {
@@ -517,8 +533,6 @@ public class PetAdmissionApplication extends JFrame {
 		        }
 		    }
 		});
-
-
 	}
 	
 	private void populateEmployeeChoice() {
@@ -537,4 +551,27 @@ public class PetAdmissionApplication extends JFrame {
             JOptionPane.showMessageDialog(this, "Error fetching employee data.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+	
+	private boolean isValidDate(String year, String month, String day) {
+	    try {
+	        int y = Integer.parseInt(year);
+	        int m = Integer.parseInt(month);
+	        int d = Integer.parseInt(day);
+	        if (m < 1 || m > 12) return false;
+	        if (d < 1 || d > 31) return false;
+	        if (m == 2) {
+	            return (d <= (isLeapYear(y) ? 29 : 28));
+	        }
+	        if (m == 4 || m == 6 || m == 9 || m == 11) {
+	            return d <= 30;
+	        }
+	        return true;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+
+	private boolean isLeapYear(int year) {
+	    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+	}
 }

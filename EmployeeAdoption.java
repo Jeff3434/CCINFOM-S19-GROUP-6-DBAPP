@@ -15,7 +15,7 @@ public class EmployeeAdoption extends JFrame {
     private DatabaseConnector dbConnector = new DatabaseConnector();
     
     private JTable employeeAdoptionTable;
-    private JTable employeeTable; // New JTable for employee list
+    private JTable employeeTable;
 
     public EmployeeAdoption() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,7 +39,7 @@ public class EmployeeAdoption extends JFrame {
         JLabel lblEmployee = new JLabel("Employee");
         lblEmployee.setHorizontalAlignment(SwingConstants.LEFT);
         lblEmployee.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        lblEmployee.setBounds(76, 414, 92, 18);
+        lblEmployee.setBounds(239, 414, 92, 18);
         contentPane.add(lblEmployee);
         
         JButton btnBack = new JButton("Back");
@@ -60,24 +60,18 @@ public class EmployeeAdoption extends JFrame {
         btnLoadHistory.setBackground(new Color(255, 255, 255));
         btnLoadHistory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Get the selected row index from the employeeTable
                 int selectedRow = employeeTable.getSelectedRow();
                 
-                // Check if a row is selected
                 if (selectedRow != -1) {
-                    // Retrieve employee information from the selected row
-                    int employeeId = (int) employeeTable.getValueAt(selectedRow, 0);  // Assuming the first column is employee_id
-                    String firstName = (String) employeeTable.getValueAt(selectedRow, 1);  // Assuming the second column is first_name
-                    String lastName = (String) employeeTable.getValueAt(selectedRow, 2);  // Assuming the third column is last_name
+                    int employeeId = (int) employeeTable.getValueAt(selectedRow, 0);  
+                    String firstName = (String) employeeTable.getValueAt(selectedRow, 1);  
+                    String lastName = (String) employeeTable.getValueAt(selectedRow, 2);  
                     
-                    // Combine the first and last name as the employeeName
                     String employeeName = firstName + " " + lastName;
                     
                     try {
-                        // Fetch employee adoption data using employeeName
                         ResultSet resultSet = dbConnector.fetchEmployeeAdoptionData(employeeId);
 
-                        // Display the adoption data in the employeeAdoptionTable
                         employeeAdoptionTable = new JTable(buildTableModel(resultSet));
                         scrollPane.setViewportView(employeeAdoptionTable);
                     } catch (SQLException ex) {
@@ -85,27 +79,25 @@ public class EmployeeAdoption extends JFrame {
                         JOptionPane.showMessageDialog(null, "Error fetching employee adoption data: " + ex.getMessage());
                     }
                 } else {
-                    // If no employee is selected, show an error message
                     JOptionPane.showMessageDialog(null, "Please select an employee from the list.");
                 }
             }
         });
-        btnLoadHistory.setBounds(352, 527, 120, 23);
+        btnLoadHistory.setBounds(352, 532, 120, 23);
         contentPane.add(btnLoadHistory);
         
         JScrollPane scrollPaneEmployee = new JScrollPane();
-        scrollPaneEmployee.setBounds(76, 432, 177, 89);
+        scrollPaneEmployee.setBounds(239, 437, 347, 89);
         contentPane.add(scrollPaneEmployee);
         
-        // Populate the employee list
         populateEmployeeList(scrollPaneEmployee);
     }
 
-    // Method to populate the employee list in the scroll pane
     private void populateEmployeeList(JScrollPane scrollPaneEmployee) {
         try {
-            ResultSet rs = dbConnector.fetchEmployeeList(); // Create this method in your DatabaseConnector class
+            ResultSet rs = dbConnector.fetchEmployeeList();
             employeeTable = new JTable(buildTableModel(rs));
+            employeeTable.setLocation(248, 0);
             employeeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             scrollPaneEmployee.setViewportView(employeeTable);
         } catch (SQLException ex) {
@@ -114,7 +106,6 @@ public class EmployeeAdoption extends JFrame {
         }
     }
 
-    // Method to build the table model from the ResultSet
     public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
         DefaultTableModel model = new DefaultTableModel();
         
